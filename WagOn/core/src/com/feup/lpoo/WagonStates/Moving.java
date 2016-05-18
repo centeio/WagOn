@@ -9,6 +9,7 @@ public class Moving extends WagonState {
 
     public Moving(Wagon wagon) {
         super(wagon);
+        wagon.setAccelerationY(0);
     }
 
     @Override

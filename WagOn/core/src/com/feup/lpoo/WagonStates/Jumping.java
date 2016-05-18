@@ -7,19 +7,27 @@ import com.feup.lpoo.logic.Wagon;
  */
 public class Jumping extends WagonState {
     private static final int GRAVITY = -10;
+    private boolean jumpedAgain;
+
     public Jumping(Wagon wagon) {
         super(wagon);
+        jumpedAgain = false;
+
         wagon.setVelocityY(200);
         wagon.setAccelerationY(GRAVITY);
     }
 
     @Override
     public void update(float acc) {
-        if(wagon.getPosition().y <= Wagon.GROUND_HEIGHT)
+        if(wagon.getVelocity().y < 0 && wagon.getPosition().y <= Wagon.GROUND_HEIGHT)
             wagon.setState(new Moving(wagon));
     }
 
     @Override
     public void jump() {
+        if(!jumpedAgain) {
+            wagon.setVelocityY(200);
+            jumpedAgain = true;
+        }
     }
 }

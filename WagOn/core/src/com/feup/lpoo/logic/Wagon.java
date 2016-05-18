@@ -34,6 +34,9 @@ public class Wagon extends Piece {
 
         if(position.y < GROUND_HEIGHT)
             position.y = GROUND_HEIGHT;
+        if(position.y > WagOn.HEIGHT-height)
+            position.y = WagOn.HEIGHT-height;
+
         if(position.x < 0) {
             position.x = 0;
             velocity.x = 0;
