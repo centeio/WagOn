@@ -1,25 +1,29 @@
 package com.feup.lpoo.logic;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.feup.lpoo.WagOn;
+import com.feup.lpoo.WagonStates.*;
 
 /**
  * Created by inesf on 14/05/2016.
  */
 public class Wagon extends Piece {
 
+    public static final int GROUND_HEIGHT = 30;
+    WagonState state;
+
     public Wagon() {
         super(10, 10, new Texture("wagon.png"), 75, 38);
 
         int x = WagOn.WIDTH/2 -width/2;
-        int y = 30;
+        int y = GROUND_HEIGHT;
 
         this.position = new Vector2(x,y);
 
         bounds = new Rectangle(x,y, width, height);
+        state = new com.feup.lpoo.WagonStates.Moving(this);
     }
 
     public void update(float dt){
@@ -28,8 +32,8 @@ public class Wagon extends Piece {
         position.add(velocity);
         velocity.scl(1/dt);
 
-        if(position.y < 30)
-            position.y = 30;
+        if(position.y < GROUND_HEIGHT)
+            position.y = GROUND_HEIGHT;
         if(position.x < 0) {
             position.x = 0;
             velocity.x = 0;
@@ -42,10 +46,31 @@ public class Wagon extends Piece {
         bounds.setPosition(position.x, position.y);
     }
 
-    public void updateAccelerationX(float acc){
-        if(acc == 0 || acc * acceleration.x < 0)
-             velocity.x = 0;
+    public void updateOnAccelerometer(float acc){
+        state.update(acc);
+    }
 
-            acceleration.x = acc;
+    public void stop(){
+        this.velocity.x = 0;
+    }
+
+    public void jump(){
+        state.jump();
+    }
+
+    public void setAccelerationX(float accelerationX){
+        acceleration.x = accelerationX;
+    }
+
+    public void setAccelerationY(float accelerationY){
+        acceleration.y = accelerationY;
+    }
+
+    public void setVelocityY(int velocityY) {
+        this.velocity.y = velocityY;
+    }
+
+    public void setState(WagonState state) {
+        this.state = state;
     }
 }

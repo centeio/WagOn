@@ -9,12 +9,12 @@ import org.w3c.dom.css.Rect;
 
 public class Piece {
     private static final int  GRAVITY = -10;
-    Rectangle bounds;
-    Vector2 position;
-    Vector2 velocity;
-    Vector2 acceleration;
-    Texture tex;
-    int width, height;
+    protected Rectangle bounds;
+    protected Vector2 position;
+    protected Vector2 velocity;
+    protected Vector2 acceleration;
+    protected Texture tex;
+    protected int width, height;
 
     public Piece(int x, int y, Texture tex, int width, int height) {
         this.position = new Vector2(x,y);
@@ -29,6 +29,14 @@ public class Piece {
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    public Vector2 getAcceleration() {
+        return acceleration;
     }
 
     public Texture getTex() {

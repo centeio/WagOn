@@ -25,18 +25,20 @@ public class PlayState  extends State{
 
     @Override
     protected void handleInput() {
+        if(Gdx.input.justTouched())
+            wagon.jump();
         if(WagOn.isMobile){
             float acc = Gdx.input.getAccelerometerY();
 
-            wagon.updateAccelerationX(acc);
+            wagon.updateOnAccelerometer(acc);
         }
         else
             if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-                wagon.updateAccelerationX(5);
+                wagon.updateOnAccelerometer(5);
             else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-                wagon.updateAccelerationX(-5);
+                wagon.updateOnAccelerometer(-5);
             else
-                wagon.updateAccelerationX(0);
+                wagon.updateOnAccelerometer(0);
     }
 
     @Override
