@@ -21,6 +21,11 @@ public class Floor {
 
     public void render(SpriteBatch sb){
         for(Tile tile: tiles)
-            sb.draw(tile.getTexture(), tile.getPosX(), 0 , tileWidth, 30);
+            if(!tile.isDestroyed())
+                sb.draw(tile.getTexture(), tile.getPosX(), 0 , tileWidth, 30);
+    }
+
+    public void destroyTile(float x){
+        tiles.get((int)x/tileWidth).destroy();
     }
 }

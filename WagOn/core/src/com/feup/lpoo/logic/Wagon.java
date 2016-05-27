@@ -12,17 +12,13 @@ import com.feup.lpoo.WagonStates.*;
 public class Wagon extends Piece {
 
     public static final int GROUND_HEIGHT = 30;
+    public static final int WIDTH = 75;
+    public static final int HEIGHT = 38;
     WagonState state;
 
     public Wagon() {
-        super(10, 10, new Texture("wagon.png"), 75, 38);
+        super(WagOn.WIDTH/2 -WIDTH/2, GROUND_HEIGHT, new Texture("wagon.png"), WIDTH,  HEIGHT);
 
-        int x = WagOn.WIDTH/2 -width/2;
-        int y = GROUND_HEIGHT;
-
-        this.position = new Vector2(x,y);
-
-        bounds = new Rectangle(x,y, width, height);
         state = new com.feup.lpoo.WagonStates.Moving(this);
     }
 

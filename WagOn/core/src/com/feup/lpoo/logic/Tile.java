@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 public class Tile {
     private Texture tile;
     private int posX;
+    private boolean destroyed;
 
     public Tile(int x){
-        tile = new Texture("tile.png");
+        tile = new Texture("tile3.png");
         posX = x;
+        destroyed = false;
+
     }
 
     public int getPosX() {
@@ -20,5 +23,13 @@ public class Tile {
 
     public Texture getTexture() {
         return tile;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void destroy(){
+        destroyed = true;
     }
 }
