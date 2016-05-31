@@ -33,4 +33,10 @@ public class WagOn extends ApplicationAdapter {
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
 	}
+
+	@Override
+	public void pause() {
+		super.pause();
+		gsm.push(new PauseState(gsm));
+	}
 }
