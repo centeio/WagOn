@@ -15,10 +15,11 @@ public class Bomb extends FallingObj {
     }
 
     @Override
-    public void detectCollision(Wagon wagon) {
+    public boolean detectCollision(Wagon wagon) {
         if(wagon.getBounds().overlaps(bounds)){
-            wagon.jump(); //TODO change this -> kill wagon
+            return true;
         }
+        return false;
     }
 
     @Override

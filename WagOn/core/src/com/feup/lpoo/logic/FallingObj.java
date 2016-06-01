@@ -44,6 +44,6 @@ public abstract class FallingObj extends Piece{
         startTime = TimeUtils.nanoTime() + 1000000000;
     }
 
-    public abstract void detectCollision(Wagon wagon);
+    public abstract boolean detectCollision(Wagon wagon);
     public abstract void detectCollision(Floor floor);
 }

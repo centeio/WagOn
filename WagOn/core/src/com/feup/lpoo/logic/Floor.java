@@ -38,14 +38,9 @@ public class Floor {
     public boolean destroyedBetween(float minx, float maxx){
         boolean ret = true;
         for(Tile  t: tiles){
-            System.out.println(minx + " " + maxx + " " + t.getPosX()+ " " +(t.getPosX()+ tileWidth));
             if(t.getPosX() >= minx && t.getPosX()<= maxx + tileWidth) {
-                System.out.println("tile");
-
-                if (!t.isDestroyed()){
+                if (!t.isDestroyed())
                     ret = false;
-                    System.out.println("nao esta destruido");
-                }
             }
         }
         return ret;

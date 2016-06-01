@@ -53,13 +53,20 @@ public class PlayState  extends State{
         fruit.update(dt);
         bomb.update(dt);
 
-        fruit.detectCollision(wagon);
+        if(fruit.detectCollision(wagon))
+            wagon.incScore();
         fruit.detectCollision(floor);
 
-        bomb.detectCollision(wagon);
+        if(bomb.detectCollision(wagon))
+            gsm.set(new LostState(gsm));
         bomb.detectCollision(floor);
 
         wagon.detectFall(floor);
+
+        if(wagon.getPosition().y <= 0)
+            gsm.set(new LostState(gsm));
+
+        System.out.println(wagon.getScore());
     }
 
     @Override
