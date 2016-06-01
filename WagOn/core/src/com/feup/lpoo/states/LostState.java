@@ -1,6 +1,7 @@
 package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.feup.lpoo.WagOn;
@@ -10,11 +11,13 @@ import com.feup.lpoo.WagOn;
  */
 public class LostState extends State{
     private Texture background;
+    int score;
 
-    public LostState(GameStateManager gsm) {
+    public LostState(GameStateManager gsm, int score) {
         super(gsm);
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
         background = new Texture("game_over.png");
+        this.score = score;
     }
 
     @Override
@@ -30,9 +33,10 @@ public class LostState extends State{
 
     @Override
     public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
+        font.setColor(Color.BLACK);
+        font.draw(sb,((Integer)score).toString(),100,100);
         sb.end();
     }
 
