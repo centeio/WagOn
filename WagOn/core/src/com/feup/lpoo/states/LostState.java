@@ -6,22 +6,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.feup.lpoo.WagOn;
 
 /**
- * Created by inesf on 31/05/2016.
+ * Created by inesf on 01/06/2016.
  */
-public class PauseState extends State {
-
+public class LostState extends State{
     private Texture background;
 
-    public PauseState(GameStateManager gsm) {
+    public LostState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
-        background = new Texture("pause.png");
+        background = new Texture("game_over.png");
     }
 
     @Override
     protected void handleInput() {
         if(Gdx.input.justTouched())
-            gsm.pop();
+            gsm.set(new MenuState(gsm));
     }
 
     @Override
