@@ -1,5 +1,6 @@
 package com.feup.lpoo.WagonStates;
 
+import com.feup.lpoo.logic.Floor;
 import com.feup.lpoo.logic.Wagon;
 
 /**
@@ -19,7 +20,7 @@ public class Jumping extends WagonState {
 
     @Override
     public void update(float acc) {
-        if(wagon.getVelocity().y < 0 && wagon.getPosition().y <= Wagon.GROUND_HEIGHT)
+        if(wagon.getVelocity().y < 0 && wagon.getPosition().y <= Floor.GROUND_HEIGHT)
             wagon.setState(new Moving(wagon));
     }
 

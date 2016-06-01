@@ -11,13 +11,13 @@ import com.feup.lpoo.WagonStates.*;
  */
 public class Wagon extends Piece {
 
-    public static final int GROUND_HEIGHT = 30;
     public static final int WIDTH = 75;
     public static final int HEIGHT = 38;
+    protected int score = 0;
     WagonState state;
 
     public Wagon() {
-        super(WagOn.WIDTH/2 -WIDTH/2, GROUND_HEIGHT, new Texture("wagon.png"), WIDTH,  HEIGHT);
+        super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, new Texture("wagon.png"), WIDTH,  HEIGHT);
 
         state = new com.feup.lpoo.WagonStates.Moving(this);
     }
@@ -28,10 +28,13 @@ public class Wagon extends Piece {
         position.add(velocity);
         velocity.scl(1/dt);
 
-        if(position.y < GROUND_HEIGHT)
-            position.y = GROUND_HEIGHT;
+        if(!(state instanceof Falling)){
+        System.out.println("chegou");
+        if(position.y < Floor.GROUND_HEIGHT)
+            position.y = Floor.GROUND_HEIGHT;
         if(position.y > WagOn.HEIGHT-height)
             position.y = WagOn.HEIGHT-height;
+        }
 
         if(position.x < 0) {
             position.x = 0;
@@ -45,8 +48,15 @@ public class Wagon extends Piece {
         bounds.setPosition(position.x, position.y);
     }
 
+    public void detectFall(Floor floor) {
+        if(position.y == Floor.GROUND_HEIGHT && floor.destroyedBetween(position.x,position.x+WIDTH)) {
+            System.out.println("detetou queda");
+            setState(new Falling(this));
+        }
+    }
+
     public void updateOnAccelerometer(float acc){
-        state.update(acc);
+        state.update(acc*2);
     }
 
     public void stop(){
@@ -65,6 +75,10 @@ public class Wagon extends Piece {
         acceleration.y = accelerationY;
     }
 
+    public void setVelocityX(int velocityX) {
+        this.velocity.x = velocityX;
+    }
+
     public void setVelocityY(int velocityY) {
         this.velocity.y = velocityY;
     }
@@ -72,4 +86,8 @@ public class Wagon extends Piece {
     public void setState(WagonState state) {
         this.state = state;
     }
+
+    public void incScore() {score++;}
+
+    public WagonState getState(){ return state;}
 }

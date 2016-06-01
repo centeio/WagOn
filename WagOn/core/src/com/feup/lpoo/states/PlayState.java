@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.feup.lpoo.WagOn;
+import com.feup.lpoo.WagonStates.Falling;
 import com.feup.lpoo.logic.*;
 
 /**
@@ -29,20 +30,20 @@ public class PlayState  extends State{
 
     @Override
     protected void handleInput() {
-        if(Gdx.input.justTouched())
-            wagon.jump();
-        if(WagOn.isMobile){
-            float acc = Gdx.input.getAccelerometerY();
+        if(!(wagon.getState() instanceof Falling)) {
+            if (Gdx.input.justTouched())
+                wagon.jump();
+            if (WagOn.isMobile) {
+                float acc = Gdx.input.getAccelerometerY();
 
-            wagon.updateOnAccelerometer(acc);
-        }
-        else
-            if(Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
+                wagon.updateOnAccelerometer(acc);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
                 wagon.updateOnAccelerometer(5);
-            else if(Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
+            else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
                 wagon.updateOnAccelerometer(-5);
             else
                 wagon.updateOnAccelerometer(0);
+        }
     }
 
     @Override
@@ -57,6 +58,8 @@ public class PlayState  extends State{
 
         bomb.detectCollision(wagon);
         bomb.detectCollision(floor);
+
+        wagon.detectFall(floor);
     }
 
     @Override

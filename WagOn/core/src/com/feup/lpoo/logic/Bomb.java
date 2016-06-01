@@ -25,6 +25,7 @@ public class Bomb extends FallingObj {
     public void detectCollision(Floor floor) {
         if (position.y + HEIGHT < 20) {
             floor.destroyTile(position.x);
+            floor.destroyTile(position.x + FallingObj.WIDTH);
             reposition();
         }
     }
