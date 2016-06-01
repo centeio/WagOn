@@ -32,9 +32,8 @@ public abstract class FallingObj extends Piece{
             velocity.scl(dt);
             position.add(velocity);
             velocity.scl(1 / dt);
-
-            bounds.setPosition(position.x, position.y);
         }
+        bounds.setPosition(position.x, position.y);
     }
 
     public void reposition(){
