@@ -39,7 +39,7 @@ public class Floor {
         boolean ret = true;
         for(Tile  t: tiles){
             System.out.println(minx + " " + maxx + " " + t.getPosX()+ " " +(t.getPosX()+ tileWidth));
-            if(t.getPosX() >= minx && t.getPosX()<= maxx + tileWidth) {
+            if(t.getPosX() +  tileWidth >= minx && t.getPosX()<= maxx) {
                 System.out.println("tile");
 
                 if (!t.isDestroyed()){
