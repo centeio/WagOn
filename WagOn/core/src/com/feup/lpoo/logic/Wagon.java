@@ -30,7 +30,6 @@ public class Wagon extends Piece {
         velocity.scl(1/dt);
 
         if(!(state instanceof Falling)){
-        System.out.println("chegou");
         if(position.y < Floor.GROUND_HEIGHT)
             position.y = Floor.GROUND_HEIGHT;
         if(position.y > WagOn.HEIGHT-height)

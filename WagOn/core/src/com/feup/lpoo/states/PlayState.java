@@ -37,7 +37,7 @@ public class PlayState  extends State{
             if (WagOn.isMobile) {
                 float acc = Gdx.input.getAccelerometerY();
 
-                wagon.updateOnAccelerometer(acc);
+                wagon.updateOnAccelerometer(2*acc);
             } else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
                 wagon.updateOnAccelerometer(5);
             else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))

@@ -21,12 +21,12 @@ public abstract class FallingObj extends Piece{
     public FallingObj(int x, Texture tex, int h) {
         super(x, WagOn.HEIGHT, tex,  WIDTH,  h);
         acceleration.y = GRAVITY;
-        lastDropTime = TimeUtils.nanoTime();
-        startTime = TimeUtils.nanoTime();
+        lastDropTime = TimeUtils.millis();
+        startTime = TimeUtils.millis();
     }
 
     public void update(float dt){
-        if(startTime < TimeUtils.nanoTime()) {
+        if(startTime <= TimeUtils.millis()) {
             velocity.add(acceleration);
             velocity.scl(dt);
             position.add(velocity);
@@ -38,8 +38,14 @@ public abstract class FallingObj extends Piece{
     protected void reposition(){
         position.set(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH), WagOn.HEIGHT);
         velocity.set(0,0);
-        lastDropTime = TimeUtils.nanoTime();
-        startTime = TimeUtils.nanoTime() + 1000000000;
+        lastDropTime = TimeUtils.millis();
+        int r = MathUtils.random(0,3);
+
+        if(this instanceof Bomb)
+            startTime = TimeUtils.millis() + (r+4)*1000;
+        else
+            startTime = TimeUtils.millis() + (r+4)*100;
+
     }
 
     public abstract boolean detectCollision(Wagon wagon);
