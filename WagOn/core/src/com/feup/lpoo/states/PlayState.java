@@ -54,8 +54,7 @@ public class PlayState  extends State{
         fruit.update(dt);
         bomb.update(dt);
 
-        if(fruit.detectCollision(wagon))
-            wagon.incScore();
+        fruit.detectCollision(wagon);
         fruit.detectCollision(floor);
 
         if(bomb.detectCollision(wagon))
