@@ -14,15 +14,15 @@ public abstract class FallingObj extends Piece{
     public static final int WIDTH = 20;
     private static final int GRAVITY = -2;
 
-    public static long lastDropTime;
-
-    private long startTime;
+    private long startTime = 0;
 
     public FallingObj(int x, Texture tex, int h) {
         super(x, WagOn.HEIGHT, tex,  WIDTH,  h);
         acceleration.y = GRAVITY;
-        lastDropTime = TimeUtils.millis();
-        startTime = TimeUtils.millis();
+        if(this instanceof Bomb && startTime == 0)
+            reposition();
+        else
+          startTime = TimeUtils.millis();
     }
 
     public void update(float dt){
@@ -38,13 +38,12 @@ public abstract class FallingObj extends Piece{
     protected void reposition(){
         position.set(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH), WagOn.HEIGHT);
         velocity.set(0,0);
-        lastDropTime = TimeUtils.millis();
-        int r = MathUtils.random(0,3);
+        int r = MathUtils.random(0,3) + 4;
 
         if(this instanceof Bomb)
-            startTime = TimeUtils.millis() + (r+4)*1000;
+            startTime = TimeUtils.millis() + r*2000;
         else
-            startTime = TimeUtils.millis() + (r+4)*100;
+            startTime = TimeUtils.millis();
 
     }
 
