@@ -6,12 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
  * Created by inesf on 18/05/2016.
  */
 public class Bomb extends FallingObj {
+    protected static int HEIGHT = 30;
     public Bomb(int x) {
-        super(x, new Texture("bomb.png"));
-    }
-
-    public Bomb(int x, Texture tex) {
-        super(x, tex);
+        super(x, new Texture("bomb.png"), HEIGHT);
     }
 
     @Override
@@ -24,9 +21,10 @@ public class Bomb extends FallingObj {
 
     @Override
     public void detectCollision(Floor floor) {
-        if (position.y + HEIGHT < 20) {
+        if (position.y + HEIGHT < Floor.GROUND_HEIGHT) {
             floor.destroyTile(position.x);
             floor.destroyTile(position.x + FallingObj.WIDTH);
+        if(position.y + HEIGHT <0)
             reposition();
         }
     }

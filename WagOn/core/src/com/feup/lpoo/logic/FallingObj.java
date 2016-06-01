@@ -10,8 +10,7 @@ import com.feup.lpoo.WagOn;
  * Created by inesf on 18/05/2016.
  */
 public abstract class FallingObj extends Piece{
-
-    public static final int HEIGHT = 20;
+    public int HEIGHT;
     public static final int WIDTH = 20;
     private static final int GRAVITY = -2;
 
@@ -19,8 +18,8 @@ public abstract class FallingObj extends Piece{
 
     private long startTime;
 
-    public FallingObj(int x, Texture tex) {
-        super(x, WagOn.HEIGHT, tex,  WIDTH,  HEIGHT);
+    public FallingObj(int x, Texture tex, int h) {
+        super(x, WagOn.HEIGHT, tex,  WIDTH,  h);
         acceleration.y = GRAVITY;
         lastDropTime = TimeUtils.nanoTime();
         startTime = TimeUtils.nanoTime();

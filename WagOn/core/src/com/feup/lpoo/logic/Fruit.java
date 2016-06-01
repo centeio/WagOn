@@ -6,9 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
  * Created by inesf on 18/05/2016.
  */
 public class Fruit extends FallingObj {
+    protected static int HEIGHT = 20;
 
     public Fruit(int x) {
-        super(x, new Texture("melon.png"));
+        super(x, new Texture("melon.png"),HEIGHT);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class Fruit extends FallingObj {
 
     @Override
     public void detectCollision(Floor floor) {
-        if (position.y + HEIGHT < 20) {
+        if (position.y + HEIGHT < 0) {
             reposition();
         }
     }
