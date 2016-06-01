@@ -3,6 +3,7 @@ package com.feup.lpoo.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.feup.lpoo.WagOn;
@@ -77,6 +78,9 @@ public class PlayState  extends State{
         sb.draw(bomb.getTex(), bomb.getPosition().x, bomb.getPosition().y, bomb.getWidth(), bomb.getHeight());
         sb.draw(wagon.getTex(), wagon.getPosition().x, wagon.getPosition().y, wagon.getWidth(), wagon.getHeight());
         floor.render(sb);
+
+        String strScore = ((Integer)wagon.getScore()).toString();
+        font.draw(sb,strScore,WagOn.WIDTH - strScore.length()*State.font_size, WagOn.HEIGHT - 10);
         sb.end();
     }
 

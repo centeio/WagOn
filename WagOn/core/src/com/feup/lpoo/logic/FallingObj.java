@@ -36,7 +36,7 @@ public abstract class FallingObj extends Piece{
         bounds.setPosition(position.x, position.y);
     }
 
-    public void reposition(){
+    protected void reposition(){
         position.set(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH), WagOn.HEIGHT);
         velocity.set(0,0);
         lastDropTime = TimeUtils.nanoTime();
