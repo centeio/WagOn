@@ -11,11 +11,11 @@ import com.feup.lpoo.WagOn;
 public class Floor {
     private Array<Tile> tiles;
     public static final int GROUND_HEIGHT = 30;
-    private int tileWidth;
+    private float tileWidth;
 
     public Floor(int numTiles){
         tiles = new Array<Tile>();
-        tileWidth = WagOn.WIDTH/numTiles;
+        tileWidth = WagOn.WIDTH/(float)numTiles;
 
         for(int i = 0; i < numTiles; i++)
             tiles.add(new Tile(i*tileWidth));
@@ -32,7 +32,7 @@ public class Floor {
     }
 
     public void destroyTile(float x){
-        tiles.get((int)x/tileWidth).destroy();
+        tiles.get((int)(x/tileWidth)).destroy();
     }
 
     public boolean destroyedBetween(float minx, float maxx){
@@ -42,14 +42,13 @@ public class Floor {
             if(t.getPosX() +  tileWidth >= minx && t.getPosX()<= maxx) {
                 System.out.println("tile");
 
-                if (!t.isDestroyed()){
+                if (!t.isDestroyed())
+
                     ret = false;
-                    System.out.println("nao esta destruido");
-                }
             }
         }
         return ret;
     }
 
-    public int getTileWidth(){return tileWidth;}
+    public float getTileWidth(){return tileWidth;}
 }

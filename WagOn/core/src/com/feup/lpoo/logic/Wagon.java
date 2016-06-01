@@ -13,6 +13,7 @@ public class Wagon extends Piece {
 
     public static final int WIDTH = 75;
     public static final int HEIGHT = 38;
+
     protected int score = 0;
     WagonState state;
 
@@ -88,6 +89,10 @@ public class Wagon extends Piece {
     }
 
     public void incScore() {score++;}
+
+    public int getScore() {
+        return score;
+    }
 
     public WagonState getState(){ return state;}
 }

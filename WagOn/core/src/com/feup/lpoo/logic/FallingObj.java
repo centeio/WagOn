@@ -32,9 +32,8 @@ public abstract class FallingObj extends Piece{
             velocity.scl(dt);
             position.add(velocity);
             velocity.scl(1 / dt);
-
-            bounds.setPosition(position.x, position.y);
         }
+        bounds.setPosition(position.x, position.y);
     }
 
     public void reposition(){
@@ -44,6 +43,6 @@ public abstract class FallingObj extends Piece{
         startTime = TimeUtils.nanoTime() + 1000000000;
     }
 
-    public abstract void detectCollision(Wagon wagon);
+    public abstract boolean detectCollision(Wagon wagon);
     public abstract void detectCollision(Floor floor);
 }

@@ -7,17 +7,17 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public class Tile {
     private Texture tile;
-    private int posX;
+    private float posX;
     private boolean destroyed;
 
-    public Tile(int x){
+    public Tile(float x){
         tile = new Texture("tile3.png");
         posX = x;
         destroyed = false;
 
     }
 
-    public int getPosX() {
+    public float getPosX() {
         return posX;
     }
 

@@ -22,7 +22,7 @@ public class PlayState  extends State{
     public PlayState(GameStateManager gsm) {
         super(gsm);
         sky = new Texture("sky.png");
-        floor = new Floor(20);
+        floor = new Floor(31);
         wagon = new Wagon();
         fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
         bomb = new Bomb(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
@@ -53,13 +53,20 @@ public class PlayState  extends State{
         fruit.update(dt);
         bomb.update(dt);
 
-        fruit.detectCollision(wagon);
+        if(fruit.detectCollision(wagon))
+            wagon.incScore();
         fruit.detectCollision(floor);
 
-        bomb.detectCollision(wagon);
+        if(bomb.detectCollision(wagon))
+            gsm.set(new LostState(gsm));
         bomb.detectCollision(floor);
 
         wagon.detectFall(floor);
+
+        if(wagon.getPosition().y <= 0)
+            gsm.set(new LostState(gsm));
+
+        System.out.println(wagon.getScore());
     }
 
     @Override

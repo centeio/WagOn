@@ -12,11 +12,12 @@ public class Fruit extends FallingObj {
     }
 
     @Override
-    public void detectCollision(Wagon wagon) {
+    public boolean detectCollision(Wagon wagon) {
         if(wagon.getBounds().overlaps(bounds)){
-
             reposition();
+            return true;
         }
+        return false;
     }
 
     @Override
