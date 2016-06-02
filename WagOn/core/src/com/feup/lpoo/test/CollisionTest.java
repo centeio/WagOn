@@ -1,5 +1,6 @@
 package com.feup.lpoo.test;
 
+import com.feup.lpoo.WagOn;
 import com.feup.lpoo.WagonStates.Falling;
 import com.feup.lpoo.logic.Bomb;
 import com.feup.lpoo.logic.Floor;
@@ -19,12 +20,18 @@ public class CollisionTest {
 
         Floor floor = new Floor(1);
         Bomb bomb = new Bomb(10);
+        float height;
 
-        while(bomb.getPosition().y > Floor.GROUND_HEIGHT){
+        assertEquals(false,  floor.getTiles().first().isDestroyed());
+
+
+        do{
+            height = bomb.getPosition().y;
             bomb.update(10);
             bomb.detectCollision(floor);
-        }
+        }while(bomb.getPosition().y < height);
 
+        assertEquals(WagOn.HEIGHT, bomb.getPosition().y, 0.01);
         assertEquals(true,  floor.getTiles().first().isDestroyed());
     }
 
