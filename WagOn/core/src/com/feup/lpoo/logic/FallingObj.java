@@ -16,7 +16,7 @@ public abstract class FallingObj extends Piece{
 
     private long startTime = 0;
 
-    public FallingObj(int x, Texture tex, int h) {
+    public FallingObj(int x, String tex, int h) {
         super(x, WagOn.HEIGHT, tex,  WIDTH,  h);
         acceleration.y = GRAVITY;
         if(this instanceof Bomb && startTime == 0)

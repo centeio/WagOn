@@ -29,7 +29,7 @@ public class CollisionTest {
             height = bomb.getPosition().y;
             bomb.update(10);
             bomb.detectCollision(floor);
-        }while(bomb.getPosition().y < height);
+        }while(bomb.getPosition().y <= height);
 
         assertEquals(WagOn.HEIGHT, bomb.getPosition().y, 0.01);
         assertEquals(true,  floor.getTiles().first().isDestroyed());

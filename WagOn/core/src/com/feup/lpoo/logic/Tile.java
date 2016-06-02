@@ -11,7 +11,11 @@ public class Tile {
     private boolean destroyed;
 
     public Tile(float x){
-        tile = new Texture("tile3.png");
+        try{
+            tile = new Texture("tile3.png");
+        }catch(NullPointerException e){
+            System.out.println("Image not found");
+        }
         posX = x;
         destroyed = false;
 

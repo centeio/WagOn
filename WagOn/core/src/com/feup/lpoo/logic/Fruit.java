@@ -9,7 +9,7 @@ public class Fruit extends FallingObj {
     protected static int HEIGHT = 20;
 
     public Fruit(int x) {
-        super(x, new Texture("melon.png"),HEIGHT);
+        super(x, "melon.png",HEIGHT);
     }
 
     @Override

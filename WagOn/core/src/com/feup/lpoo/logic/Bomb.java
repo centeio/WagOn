@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Bomb extends FallingObj {
     protected static int HEIGHT = 30;
     public Bomb(int x) {
-        super(x, new Texture("bomb.png"), HEIGHT);
+        super(x, "bomb.png", HEIGHT);
     }
 
     @Override

@@ -16,9 +16,13 @@ public class Piece {
     protected Texture tex;
     protected int width, height;
 
-    public Piece(int x, int y, Texture tex, int width, int height) {
+    public Piece(int x, int y, String tex, int width, int height) {
         this.position = new Vector2(x,y);
-        this.tex = tex;
+        try {
+            this.tex = new Texture(tex);
+        }catch(NullPointerException e){
+            System.out.println("Image not found");
+        }
         this.velocity = new Vector2(0,0);
         this.acceleration = new Vector2(0, GRAVITY);
         this.width = width;

@@ -18,7 +18,7 @@ public class Wagon extends Piece {
     WagonState state;
 
     public Wagon() {
-        super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, new Texture("wagon.png"), WIDTH,  HEIGHT);
+        super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, "wagon.png", WIDTH,  HEIGHT);
 
         state = new com.feup.lpoo.WagonStates.Moving(this);
     }
