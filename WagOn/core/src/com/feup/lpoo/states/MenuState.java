@@ -1,5 +1,6 @@
 package com.feup.lpoo.states;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.feup.lpoo.logic.GameButton;
@@ -18,34 +19,37 @@ public class MenuState extends State {
 
     private GameButton finishButton;
 
+    private State playState;
+
     public MenuState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
         background = new Texture("bg.png");
 
         Texture playBtn = new Texture("playbtn.png");
-        Texture stopBtn = new Texture("stopbtn.png");
+        Texture stopBtn = new Texture("endbtn.png");
         playButton = new GameButton(playBtn, WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
         finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
-
+        playState = new PlayState(gsm);
     }
 
     @Override
     public void handleInput() {
 
         if(playButton.isClicked()){
-            gsm.set(new PlayState(gsm));
+            gsm.set(playState);
         }
 
-     //   if(finishButton.isClicked()){
-//          finish game
-//        }
+        if(finishButton.isClicked()){
+            Gdx.app.exit();
+        }
     }
 
     @Override
     public void update(float dt) {
         handleInput();
         playButton.update(dt);
+        finishButton.update(dt);
     }
 
     @Override
