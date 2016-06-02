@@ -16,13 +16,18 @@ public class MenuState extends State {
 
     private GameButton playButton;
 
+    private GameButton finishButton;
+
     public MenuState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
         background = new Texture("bg.png");
 
         Texture playBtn = new Texture("playbtn.png");
-        playButton = new GameButton(playBtn, WagOn.WIDTH/2, WagOn.HEIGHT/4, cam);
+        Texture stopBtn = new Texture("stopbtn.png");
+        playButton = new GameButton(playBtn, WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
+        finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
+
     }
 
     @Override
@@ -31,6 +36,10 @@ public class MenuState extends State {
         if(playButton.isClicked()){
             gsm.set(new PlayState(gsm));
         }
+
+     //   if(finishButton.isClicked()){
+//          finish game
+//        }
     }
 
     @Override
@@ -45,6 +54,7 @@ public class MenuState extends State {
         sb.begin();
         sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
         playButton.render(sb);
+        finishButton.render(sb);
         sb.end();
     }
 
