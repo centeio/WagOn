@@ -16,7 +16,6 @@ public class Fruit extends FallingObj {
     public boolean detectCollision(Wagon wagon) {
         if(wagon.getBounds().overlaps(bounds)){
             reposition();
-            wagon.incScore();
             return true;
         }
         return false;

@@ -2,6 +2,8 @@ package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,6 +21,11 @@ public class PlayState  extends State{
     private Wagon wagon;
     private Fruit fruit;
     private Bomb bomb;
+    private Sound jumpSound;
+    private Sound bombSound;
+    private Sound caughtSound;
+
+
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -27,13 +34,20 @@ public class PlayState  extends State{
         wagon = new Wagon();
         fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
         bomb = new Bomb(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
+        jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
+        bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
+        caughtSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+
+
     }
 
     @Override
     protected void handleInput() {
         if(!(wagon.getState() instanceof Falling)) {
-            if (Gdx.input.justTouched())
+            if (Gdx.input.justTouched()){
+                jumpSound.play();
                 wagon.jump();
+            }
             if (WagOn.isMobile) {
                 float acc = Gdx.input.getAccelerometerY();
 
@@ -54,11 +68,16 @@ public class PlayState  extends State{
         fruit.update(dt);
         bomb.update(dt);
 
-        fruit.detectCollision(wagon);
+        if(fruit.detectCollision(wagon)){
+            caughtSound.play();
+            wagon.incScore();
+        }
         fruit.detectCollision(floor);
 
-        if(bomb.detectCollision(wagon))
+        if(bomb.detectCollision(wagon)) {
+            bombSound.play();
             gsm.set(new LostState(gsm, wagon.getScore()));
+        }
         bomb.detectCollision(floor);
 
         wagon.detectFall(floor);
