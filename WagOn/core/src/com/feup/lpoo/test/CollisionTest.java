@@ -1,7 +1,7 @@
 package com.feup.lpoo.test;
 
 import com.feup.lpoo.WagOn;
-import com.feup.lpoo.WagonStates.Falling;
+import com.feup.lpoo.WagonStates.*;
 import com.feup.lpoo.logic.Bomb;
 import com.feup.lpoo.logic.Floor;
 import com.feup.lpoo.logic.Fruit;
@@ -24,7 +24,7 @@ public class CollisionTest {
 
         assertEquals(false,  floor.getTiles().first().isDestroyed());
 
-
+        bomb.startFall();
         do{
             height = bomb.getPosition().y;
             bomb.update(10);
@@ -36,14 +36,38 @@ public class CollisionTest {
     }
 
     @Test
-    public void testFallingCar(){
+    public void testExplodeWagon(){
+        Wagon wagon = new Wagon();
+        Bomb bomb = new Bomb(10);
+        float height;
+        boolean collided;
+
+        bomb.startFall();
+
+        do{
+            height = bomb.getPosition().y;
+            bomb.update(10);
+            collided = bomb.detectCollision(wagon);
+        }while(bomb.getPosition().y <= height);
+
+        assertEquals(WagOn.HEIGHT, bomb.getPosition().y, 0.01);
+        assertEquals(true,  collided);
+
+    }
+
+    @Test
+    public void testFallingWagon(){
         Floor floor = new Floor(1);
         Wagon wagon = new Wagon();
+
+        assertTrue(wagon.getState() instanceof Moving);
+        assertFalse(floor.getTiles().first().isDestroyed());
 
         floor.destroyTile(10);
         wagon.detectFall(floor);
 
         assertTrue(wagon.getState() instanceof Falling);
+        assertTrue(floor.getTiles().first().isDestroyed());
     }
 
     @Test

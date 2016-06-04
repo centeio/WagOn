@@ -14,7 +14,7 @@ public abstract class FallingObj extends Piece{
     public static final int WIDTH = 20;
     private static final int GRAVITY = -2;
 
-    private long startTime = 0;
+    protected long startTime = 0;
 
     public FallingObj(int x, String tex, int h) {
         super(x, WagOn.HEIGHT, tex,  WIDTH,  h);

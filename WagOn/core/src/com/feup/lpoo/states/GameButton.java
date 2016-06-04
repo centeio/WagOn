@@ -1,4 +1,4 @@
-package com.feup.lpoo.logic;
+package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;

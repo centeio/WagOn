@@ -36,7 +36,7 @@ public class PlayState  extends State{
         bomb = new Bomb(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
-        caughtSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+        caughtSound = Gdx.audio.newSound(Gdx.files.internal("bump.wav"));
 
 
     }
@@ -70,7 +70,6 @@ public class PlayState  extends State{
 
         if(fruit.detectCollision(wagon)){
             caughtSound.play();
-            wagon.incScore();
         }
         fruit.detectCollision(floor);
 
