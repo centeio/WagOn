@@ -103,6 +103,9 @@ public class PlayState  extends State{
 
     @Override
     public void dispose() {
-
+        fruit.getTex().dispose();
+        bomb.getTex().dispose();
+        wagon.getTex().dispose();
+        sky.dispose();
     }
 }

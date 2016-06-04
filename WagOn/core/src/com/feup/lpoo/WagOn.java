@@ -25,6 +25,7 @@ public class WagOn extends ApplicationAdapter {
 		gsm = new GameStateManager();
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		gsm.push(new MenuState(gsm));
+		//gsm.push(new MultiPlayerState(gsm));
 	}
 
 	@Override

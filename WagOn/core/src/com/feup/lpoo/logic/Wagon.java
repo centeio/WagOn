@@ -23,6 +23,13 @@ public class Wagon extends Piece {
         state = new com.feup.lpoo.WagonStates.Moving(this);
     }
 
+
+    public Wagon(String texture) {
+        super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, texture, WIDTH,  HEIGHT);
+
+        state = new com.feup.lpoo.WagonStates.Moving(this);
+    }
+
     public void update(float dt){
         velocity.add(acceleration);
         velocity.scl(dt);
