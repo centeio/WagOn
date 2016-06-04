@@ -68,6 +68,11 @@ public class CollisionTest {
 
         assertTrue(wagon.getState() instanceof Falling);
         assertTrue(floor.getTiles().first().isDestroyed());
+
+        wagon.updateOnAccelerometer(5);
+        assertEquals(0, wagon.getVelocity().x, 0.01);
+        wagon.jump();
+        assertTrue(wagon.getVelocity().y <= 0);
     }
 
     @Test

@@ -51,6 +51,59 @@ public class WagonActionTest{
         assertTrue(wagon.getAcceleration().y < 0);
         wagon.update(10);
         assertTrue(wagon.getPosition().y > Floor.GROUND_HEIGHT);
+
+        wagon.updateOnAccelerometer(5);
+        assertTrue(wagon.getVelocity().y > 0);
+        assertTrue(wagon.getAcceleration().y < 0);
+        wagon.update(10);
+        assertTrue(wagon.getPosition().y > Floor.GROUND_HEIGHT);
     }
 
+    @Test
+    public void testLanding(){
+        Wagon wagon = new Wagon();
+
+        assertTrue(wagon.getState() instanceof Moving);
+
+        assertEquals(0, wagon.getVelocity().x, 0.01);
+        assertEquals(WagOn.WIDTH/2 - Wagon.WIDTH/2, wagon.getPosition().x,0.01);
+        wagon.jump();
+        assertTrue(wagon.getState() instanceof Jumping);
+
+        do{
+            wagon.updateOnAccelerometer(5);
+            wagon.update(20);
+        }while(wagon.getPosition().y > Floor.GROUND_HEIGHT);
+
+        wagon.updateOnAccelerometer(5);
+
+        assertTrue(wagon.getState() instanceof Moving);
+        assertEquals(0, wagon.getVelocity().x ,0.01);
+    }
+
+    @Test
+    public void testJumpTwice(){
+        Wagon wagon = new Wagon();
+
+        assertTrue(wagon.getState() instanceof Moving);
+
+        assertEquals(0, wagon.getVelocity().x, 0.01);
+        assertEquals(WagOn.WIDTH/2 - Wagon.WIDTH/2, wagon.getPosition().x,0.01);
+        wagon.jump();
+        assertTrue(wagon.getState() instanceof Jumping);
+        assertEquals(200, wagon.getVelocity().y, 0.05);
+
+        wagon.update(10);
+        assertTrue(wagon.getVelocity().y < 200);
+
+        wagon.jump();
+        assertEquals(200, wagon.getVelocity().y, 0.05);
+
+        wagon.update(10);
+        assertTrue(wagon.getVelocity().y < 200);
+
+        wagon.jump();
+        assertTrue(wagon.getVelocity().y < 200);
+
+    }
 }
