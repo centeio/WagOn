@@ -12,7 +12,7 @@ public class Falling extends WagonState{
 
     /**
      * Constructor for Falling state.
-     * Sets wagon velocity to 0 and acceleration to gravity
+     * <p>Sets wagon velocity to 0 and acceleration to gravity</p>
      * @param wagon wagon in this state
      */
     public Falling(Wagon wagon) {

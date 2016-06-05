@@ -17,7 +17,7 @@ public class Wagon extends Piece {
 
     /**
      * Default constructor for class Wagon.
-     * Initializes wagon in the bottom centre of the screen with default Texture
+     * <p>Initializes wagon in the bottom centre of the screen with default Texture</p>
      */
     public Wagon() {
         super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, "wagon.png", WIDTH,  HEIGHT);

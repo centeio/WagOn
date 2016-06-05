@@ -71,7 +71,7 @@ public class Floor {
     }
 
     /**
-     * Resets tiles to their original state <p>not destroyed</p>
+     * Resets tiles to their original state (not destroyed)
      */
     public void reset(){
         for(Tile tile: tiles){

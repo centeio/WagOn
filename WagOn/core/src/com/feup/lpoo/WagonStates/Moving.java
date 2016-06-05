@@ -11,7 +11,7 @@ public class Moving extends WagonState {
 
     /**
      * Constructor for Moving state.
-     * Sets wagon's acceleration in y axis to 0
+     * <p>Sets wagon's acceleration in y axis to 0</p>
      * @param wagon wagon in this state
      */
     public Moving(Wagon wagon) {

@@ -50,8 +50,8 @@ public class Bomb extends FallingObj {
     }
 
     /**
-     * Makes bomb fall imidiatly in the middle of the screen
-     * <p>method implemented mostly for test purposes</p>
+     * Makes bomb fall imidiatly in the middle of the screen.
+     * <p>(method implemented mostly for test purposes)</p>
      */
     public void startFall(){
         startTime = TimeUtils.millis();

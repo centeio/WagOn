@@ -13,7 +13,7 @@ public class Jumping extends WagonState {
 
     /**
      * Constructor for Jumping state.
-     * Sets wagon velocity in y axis to 200 and acceleration to gravity
+     * <p>Sets wagon velocity in y axis to 200 and acceleration to gravity</p>
      * @param wagon wagon in this state
      */
     public Jumping(Wagon wagon) {
