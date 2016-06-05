@@ -51,7 +51,7 @@ public class MultiPlayerState  extends State{
         wagon1 = new Wagon("wagon.png");
         wagon2 = new Wagon("wagon2.png");
         fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
-        bomb = new Bomb(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
+        bomb = new Bomb();
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
         caughtSound = Gdx.audio.newSound(Gdx.files.internal("bump.wav"));

@@ -1,15 +1,28 @@
 package com.feup.lpoo.logic;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /**
- * Created by inesf on 18/05/2016.
+ * Class representing falling fruit
+ * @author Carolina Centeio e Ines Proenca
  */
 public class Fruit extends FallingObj {
-    protected static int HEIGHT = 20;
+    protected static int HEIGHT = 20; /**Fruit's texture height*/
 
+    /**
+     * Constructor for class Fruit
+     * @param x starting x coordinate
+     */
     public Fruit(int x) {
         super(x, "melon.png",HEIGHT);
+
+        startTime = TimeUtils.millis();
+    }
+
+    @Override
+    protected void updateStartTime() {
+        startTime = TimeUtils.millis();
     }
 
     @Override
