@@ -105,6 +105,7 @@ public class Wagon extends Piece {
     @Override
     public void reset() {
         position.set(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT);
+        state = new Moving(this);
         score = 0;
     }
 }
