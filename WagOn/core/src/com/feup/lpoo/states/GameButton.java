@@ -7,23 +7,30 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 /**
- * Created by inesf on 14/05/2016.
+ * Class representing a button
+ * @author Carolina Centeio e Ines Proenca
  */
 public class GameButton {
 
-    // center at x, y
-    private float x;
-    private float y;
-    private float width;
-    private float height;
+    private float x;                /**center x coordinate*/
+    private float y;                /**center y coordinate*/
+    private float width;            /**button's width*/
+    private float height;           /**button's heigth*/
 
-    private Texture tex;
+    private Texture tex;            /**button's image*/
 
-    Vector3 vec;
-    private OrthographicCamera cam;
+    Vector3 lastTouch;              /**Last touched position*/
+    private OrthographicCamera cam; /**Camera*/
 
-    private boolean clicked;
+    private boolean clicked;        /**boolean indicating wether or not button has been clicked*/
 
+    /**
+     * GameButton constructor
+     * @param tex image
+     * @param x center x coordinate
+     * @param y center y coordinate
+     * @param cam camera
+     */
     public GameButton(Texture tex, float x, float y, OrthographicCamera cam) {
 
         this.tex = tex;
@@ -33,20 +40,28 @@ public class GameButton {
 
         width = tex.getWidth();
         height = tex.getHeight();
-        vec = new Vector3();
+        lastTouch = new Vector3();
 
     }
 
+    /**
+     * Get button's clicked status
+     * @return whether or not button has been clicked
+     */
     public boolean isClicked() { return clicked; }
 
+    /**
+     * Updates button according to user actions
+     * @param dt time passed since last update
+     */
     public void update(float dt) {
 
-        vec.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        cam.unproject(vec);
+        lastTouch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        cam.unproject(lastTouch);
 
         if(Gdx.input.justTouched() &&
-                vec.x > x - width / 2 && vec.x < x + width / 2 &&
-                vec.y > y - height / 2 && vec.y < y + height / 2) {
+                lastTouch.x > x - width / 2 && lastTouch.x < x + width / 2 &&
+                lastTouch.y > y - height / 2 && lastTouch.y < y + height / 2) {
             clicked = true;
         }
         else {
@@ -55,12 +70,19 @@ public class GameButton {
 
     }
 
+    /**
+     * draw button in sprite batch
+     * @param sb sprite bactch
+     */
     public void render(SpriteBatch sb) {
 
         sb.draw(tex, x - width / 2, y - height / 2);
 
     }
 
+    /**
+     * Disposes of button image
+     */
     public void dispose(){
         tex.dispose();
     }

@@ -19,7 +19,7 @@ public class CollisionTest {
     public void testExplodeFloor(){
 
         Floor floor = new Floor(1);
-        Bomb bomb = new Bomb(10);
+        Bomb bomb = new Bomb();
         float height;
 
         assertEquals(false,  floor.getTiles().first().isDestroyed());
@@ -38,7 +38,7 @@ public class CollisionTest {
     @Test
     public void testExplodeWagon(){
         Wagon wagon = new Wagon();
-        Bomb bomb = new Bomb(10);
+        Bomb bomb = new Bomb();
         float height;
         boolean collided;
 

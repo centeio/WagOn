@@ -5,7 +5,6 @@ import android.view.WindowManager;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.feup.lpoo.WagOn;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -14,6 +13,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
 		config.useAccelerometer = true;
+
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		initialize(new WagOn(true), config);

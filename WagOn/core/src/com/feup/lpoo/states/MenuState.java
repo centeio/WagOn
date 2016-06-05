@@ -20,7 +20,7 @@ public class MenuState extends State {
 
     private GameButton finishButton;
 
-    private State playState;
+    private static PlayState playState = null;
 
     private Sound clickSound;
 
@@ -36,8 +36,12 @@ public class MenuState extends State {
         playButton = new GameButton(playBtn, WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
         finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
 
-        playState = new PlayState(gsm);
-
+        if(playState == null) {
+            playState = new PlayState(gsm);
+        }
+        else{
+            playState.reset();
+        }
         clickSound = Gdx.audio.newSound(Gdx.files.internal("mouse.wav"));
 
     }

@@ -4,12 +4,18 @@ import com.feup.lpoo.logic.Floor;
 import com.feup.lpoo.logic.Wagon;
 
 /**
- * Created by inesf on 18/05/2016.
+ * Class representing state when wagon is jumping
+ * @author Carolina Centeio e Ines Proenca
+ * @see WagonState
  */
 public class Jumping extends WagonState {
-    private static final int GRAVITY = -10;
-    private boolean jumpedAgain;
+    private boolean jumpedAgain; /**Restricts maximum of consecutive jumps to two*/
 
+    /**
+     * Constructor for Jumping state.
+     * <p>Sets wagon velocity in y axis to 200 and acceleration to gravity</p>
+     * @param wagon wagon in this state
+     */
     public Jumping(Wagon wagon) {
         super(wagon);
         jumpedAgain = false;

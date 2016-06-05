@@ -7,24 +7,28 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.feup.lpoo.WagOn;
 
 /**
- * Created by inesf on 18/05/2016.
+ * Class representing a FallingObj
+ * @author Carolina Centeio e Ines Proenca
  */
 public abstract class FallingObj extends Piece{
-    public int HEIGHT;
-    public static final int WIDTH = 20;
-    private static final int GRAVITY = -2;
+    public int HEIGHT;                      /**Falling object's heigth*/
+    public static final int WIDTH = 20;     /**Falling object's width*/
+    private static final int GRAVITY = -2;  /**Gravity affecting FallingObj*/
 
-    protected long startTime = 0;
+    protected long startTime = 0;           /**Time to start falling in milliseconds*/
 
-    public FallingObj(int x, String tex, int h) {
+    /**
+     * Constructor for class FallingObj
+     * @param x
+     * @param tex
+     * @param h
+     */
+    protected FallingObj(int x, String tex, int h) {
         super(x, WagOn.HEIGHT, tex,  WIDTH,  h);
         acceleration.y = GRAVITY;
-        if(this instanceof Bomb && startTime == 0)
-            reposition();
-        else
-          startTime = TimeUtils.millis();
     }
 
+    @Override
     public void update(float dt){
         if(startTime <= TimeUtils.millis()) {
             velocity.add(acceleration);
@@ -35,18 +39,36 @@ public abstract class FallingObj extends Piece{
         bounds.setPosition(position.x, position.y);
     }
 
+    /**
+     * Reposition object in the top of the screen in a random x coordinate and updates startTime
+     */
     protected void reposition(){
         position.set(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH), WagOn.HEIGHT);
         velocity.set(0,0);
-        int r = MathUtils.random(0,3) + 4;
 
-        if(this instanceof Bomb)
-            startTime = TimeUtils.millis() + r*2000;
-        else
-            startTime = TimeUtils.millis();
-
+        updateStartTime();
     }
 
+    /**
+     * Updates when object should start falling
+     */
+    protected abstract void updateStartTime();
+
+    /**
+     * Detects collision between object and wagon
+     * @param wagon wagon which may have colided
+     * @return wether collision occurred
+     */
     public abstract boolean detectCollision(Wagon wagon);
+
+    /**
+     * Detects collision between object and floor
+     * @param floor floor which may have colided
+     */
     public abstract void detectCollision(Floor floor);
+
+    @Override
+    public void reset() {
+       reposition();
+    }
 }
