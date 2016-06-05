@@ -101,11 +101,14 @@ public class PlayState  extends State{
         sb.end();
     }
 
+    public void reset(){
+        bomb.reset();
+        fruit.reset();
+        wagon.reset();
+        floor.reset();
+    }
+
     @Override
     public void dispose() {
-        fruit.getTex().dispose();
-        bomb.getTex().dispose();
-        wagon.getTex().dispose();
-        sky.dispose();
     }
 }

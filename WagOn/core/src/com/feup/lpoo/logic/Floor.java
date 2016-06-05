@@ -49,4 +49,10 @@ public class Floor {
     }
 
     public float getTileWidth(){return tileWidth;}
+
+    public void reset(){
+        for(Tile tile: tiles){
+            tile.reset();
+        }
+    }
 }

@@ -101,4 +101,10 @@ public class Wagon extends Piece {
     }
 
     public WagonState getState(){ return state;}
+
+    @Override
+    public void reset() {
+        position.set(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT);
+        score = 0;
+    }
 }

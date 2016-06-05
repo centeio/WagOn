@@ -49,4 +49,9 @@ public abstract class FallingObj extends Piece{
 
     public abstract boolean detectCollision(Wagon wagon);
     public abstract void detectCollision(Floor floor);
+
+    @Override
+    public void reset() {
+       reposition();
+    }
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import org.w3c.dom.css.Rect;
 
-public class Piece {
+public abstract class Piece {
     private static final int  GRAVITY = -10;
     protected Rectangle bounds;
     protected Vector2 position;
@@ -59,5 +59,5 @@ public class Piece {
         return height;
     }
 
-
+    public abstract void reset();
 }

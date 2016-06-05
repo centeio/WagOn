@@ -36,4 +36,8 @@ public class Tile {
     public void destroy(){
         destroyed = true;
     }
+
+    public void reset() {
+        destroyed = false;
+    }
 }
