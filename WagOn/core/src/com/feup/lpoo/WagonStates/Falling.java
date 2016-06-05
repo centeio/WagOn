@@ -4,11 +4,17 @@ import com.feup.lpoo.logic.Floor;
 import com.feup.lpoo.logic.Wagon;
 
 /**
- * Created by Carolina on 01/06/2016.
+ * Class representing state when wagon is falling
+ * @author Carolina Centeio e Ines Proenca
+ * @see WagonState
  */
 public class Falling extends WagonState{
-    private static final int GRAVITY = -10;
 
+    /**
+     * Constructor for Falling state.
+     * Sets wagon velocity to 0 and acceleration to gravity
+     * @param wagon wagon in this state
+     */
     public Falling(Wagon wagon) {
         super(wagon);
 
