@@ -2,6 +2,7 @@ package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,7 +25,6 @@ public class PlayState  extends State{
     private Sound jumpSound;
     private Sound bombSound;
     private Sound caughtSound;
-
 
 
     public PlayState(GameStateManager gsm) {
@@ -77,6 +77,7 @@ public class PlayState  extends State{
             bombSound.play();
             gsm.set(new LostState(gsm, wagon.getScore()));
         }
+
         bomb.detectCollision(floor);
 
         wagon.detectFall(floor);
@@ -84,7 +85,8 @@ public class PlayState  extends State{
         if(wagon.getPosition().y <= 0)
             gsm.set(new LostState(gsm, wagon.getScore()));
 
-        System.out.println(wagon.getScore());
+
+//        System.out.println(wagon.getScore());
     }
 
     @Override

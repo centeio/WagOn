@@ -1,6 +1,7 @@
 package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,6 +24,7 @@ public class MenuState extends State {
 
     private Sound clickSound;
 
+
     public MenuState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
@@ -30,10 +32,14 @@ public class MenuState extends State {
 
         Texture playBtn = new Texture("playbtn.png");
         Texture stopBtn = new Texture("endbtn.png");
+
         playButton = new GameButton(playBtn, WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
         finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
+
         playState = new PlayState(gsm);
+
         clickSound = Gdx.audio.newSound(Gdx.files.internal("mouse.wav"));
+
     }
 
     @Override

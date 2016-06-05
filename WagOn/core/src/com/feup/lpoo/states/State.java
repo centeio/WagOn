@@ -1,6 +1,7 @@
 package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +17,8 @@ public abstract class State {
     protected Vector3 mouse;
     protected GameStateManager gsm;
     protected static BitmapFont font = null;
+    protected Preferences prefs;
+
 
     protected State(GameStateManager gsm){
         this.gsm = gsm;

@@ -22,6 +22,17 @@ public class LostState extends State{
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
         background = new Texture("game_over.png");
         this.score = score;
+        prefs = Gdx.app.getPreferences("My Preferences");
+
+        System.out.println("Lost state init ");
+        System.out.println("Lost " + prefs.getInteger("score",0));
+
+        if(score > prefs.getInteger("score", 0)) {
+            prefs.putInteger("score", score);
+            System.out.println("after actual "+ prefs.getInteger("score",0));
+            prefs.flush();
+        }
+
 
 
     }
@@ -42,7 +53,9 @@ public class LostState extends State{
         sb.begin();
         sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
         font.setColor(Color.WHITE);
-        font.draw(sb,((Integer)score).toString(),WagOn.WIDTH/2, 5*WagOn.HEIGHT/6);
+        font.draw(sb,((Integer)score).toString(),WagOn.WIDTH/3, 5*WagOn.HEIGHT/6);
+        System.out.println(prefs.getInteger("score",0));
+        font.draw(sb,((Integer)prefs.getInteger("score",0)).toString(),2*WagOn.WIDTH/3, 5*WagOn.HEIGHT/6);
         sb.end();
     }
 
