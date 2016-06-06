@@ -1,6 +1,6 @@
 package com.feup.lpoo.network;
 
 public interface ServerInterface {
-    public void move1(float x, float y);
-    public void join(ClientCallbackInterface c);
+    public void move(int id, float x, float y);
+    public int join(ClientCallbackInterface c);
 }

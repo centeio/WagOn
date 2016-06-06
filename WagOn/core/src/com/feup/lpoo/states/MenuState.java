@@ -35,25 +35,23 @@ public class MenuState extends State {
         background = new Texture("bg.png");
 
         Texture playBtn = new Texture("playbtn.png");
-        Texture playMPBtn = new Texture("playbtn.png");
+        Texture playMPBtn = new Texture("multi.png");
         Texture stopBtn = new Texture("endbtn.png");
 
-        playButton = new GameButton(playBtn, WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
-        playMPButton = new GameButton(playMPBtn, 0, WagOn.HEIGHT/4, cam);
-        finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
+        playButton = new GameButton(playBtn, WagOn.WIDTH/4, WagOn.HEIGHT/4, cam);
+        playMPButton = new GameButton(playMPBtn, 2*WagOn.WIDTH/4, WagOn.HEIGHT/4, cam);
+        finishButton = new GameButton(stopBtn, 3*WagOn.WIDTH/4, WagOn.HEIGHT/4, cam);
 
-        /*if(playState == null) {
+        if(playState == null) {
             playState = new PlayState(gsm);
         }
         else{
             playState.reset();
-        }*/
-
-        /*if(multiPlayerState == null) {
-            multiPlayerState = new MultiPlayerState(gsm, false);
         }
-        else{
-            //multiPlayerState.reset();
+
+
+       /* else{
+            multiPlayerState.reset();
         }*/
 
         clickSound = Gdx.audio.newSound(Gdx.files.internal("mouse.wav"));
@@ -65,12 +63,19 @@ public class MenuState extends State {
 
         if(playButton.isClicked()){
             clickSound.play();
-            gsm.set(new MultiPlayerState(gsm, false));
+            gsm.set(playState);
         }
 
         if(playMPButton.isClicked()){
             clickSound.play();
-            gsm.set(new MultiPlayerState(gsm, true));
+            if(multiPlayerState == null) {
+                if(WagOn.isMobile)
+                    multiPlayerState = new MultiPlayerState(gsm, false);
+                else
+                    multiPlayerState = new MultiPlayerState(gsm, true);
+
+            }
+            gsm.set(multiPlayerState);
         }
 
         if(finishButton.isClicked()){
