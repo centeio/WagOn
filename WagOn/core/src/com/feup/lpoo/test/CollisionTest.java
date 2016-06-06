@@ -33,6 +33,9 @@ public class CollisionTest {
 
         assertEquals(WagOn.HEIGHT, bomb.getPosition().y, 0.01);
         assertEquals(true,  floor.getTiles().first().isDestroyed());
+
+        floor.reset();
+        assertEquals(false,  floor.getTiles().first().isDestroyed());
     }
 
     @Test

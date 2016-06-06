@@ -68,7 +68,11 @@ public class Wagon extends Piece {
     public Wagon() {
         super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, "wagon.png", WIDTH,  HEIGHT);
 
-        prepareAnimation(new TextureRegion(new Texture("wagon destruction.png")), 5, 1f);
+        try{
+            prepareAnimation(new TextureRegion(new Texture("wagon destruction.png")), 5, 1f);
+        }catch(NullPointerException e){
+            System.out.println("Image not found");
+        }
 
         state = new com.feup.lpoo.WagonStates.Moving(this);
 
@@ -84,12 +88,18 @@ public class Wagon extends Piece {
     public Wagon(String texture) {
         super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, texture, WIDTH,  HEIGHT);
 
-        if(texture.equals("wagon.png"))
-            prepareAnimation(new TextureRegion(new Texture("wagon destruction.png")), 5, 1f);
-        else
-            prepareAnimation(new TextureRegion(new Texture("wagon2 destruction.png")), 5, 1f);
+        try {
+            if (texture.equals("wagon.png"))
+                prepareAnimation(new TextureRegion(new Texture("wagon destruction.png")), 5, 1f);
+            else
+                prepareAnimation(new TextureRegion(new Texture("wagon2 destruction.png")), 5, 1f);
+        }catch(NullPointerException e){
+            System.out.println("Image not found");
+        }
 
         state = new com.feup.lpoo.WagonStates.Moving(this);
+
+        destroyed = false;
     }
 
     @Override
@@ -100,10 +110,10 @@ public class Wagon extends Piece {
         velocity.scl(1/dt);
 
         if(!(state instanceof Falling)){
-        if(position.y < Floor.GROUND_HEIGHT)
-            position.y = Floor.GROUND_HEIGHT;
-        if(position.y > WagOn.HEIGHT-height)
-            position.y = WagOn.HEIGHT-height;
+            if(position.y < Floor.GROUND_HEIGHT)
+                position.y = Floor.GROUND_HEIGHT;
+            if(position.y > WagOn.HEIGHT-height)
+                position.y = WagOn.HEIGHT-height;
         }
 
         if(position.x < 0) {
