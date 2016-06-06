@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.feup.lpoo.WagOn;
 
@@ -20,7 +21,7 @@ public class LostState extends State{
         gameoverSound = Gdx.audio.newSound(Gdx.files.internal("gameover.wav"));
         gameoverSound.play();
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
-        background = new Texture("game_over.png");
+        background = new Texture("sky.png");
         this.score = score;
         prefs = Gdx.app.getPreferences("My Preferences");
 
@@ -50,12 +51,25 @@ public class LostState extends State{
 
     @Override
     public void render(SpriteBatch sb) {
+        sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
         font.setColor(Color.WHITE);
-        font.draw(sb,((Integer)score).toString(),WagOn.WIDTH/3, 5*WagOn.HEIGHT/6);
-        System.out.println(prefs.getInteger("score",0));
-        font.draw(sb,((Integer)prefs.getInteger("score",0)).toString(),2*WagOn.WIDTH/3, 5*WagOn.HEIGHT/6);
+
+        GlyphLayout layout = new GlyphLayout(titleFont, strings.get("gameOver"));
+
+        titleFont.draw(sb, layout, (WagOn.WIDTH - layout.width) / 2, 3*WagOn.HEIGHT/ 5);
+
+        layout = new GlyphLayout(font, strings.get("touch"));
+
+        font.draw(sb,layout,(WagOn.WIDTH - layout.width) / 2,WagOn.HEIGHT/4);
+
+        layout = new GlyphLayout(font, strings.format("score", score));
+
+        font.draw(sb,layout,20, 5*WagOn.HEIGHT/6);
+
+        layout = new GlyphLayout(font, strings.format("best", prefs.getInteger("score",0)));
+        font.draw(sb,layout,20, 5*WagOn.HEIGHT/6 - (font_size +10));
         sb.end();
     }
 

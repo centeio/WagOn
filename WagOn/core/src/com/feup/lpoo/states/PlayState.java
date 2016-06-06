@@ -75,7 +75,6 @@ public class PlayState  extends State{
 
         if(bomb.detectCollision(wagon)) {
             bombSound.play();
-            gsm.set(new LostState(gsm, wagon.getScore()));
         }
 
         bomb.detectCollision(floor);
@@ -83,6 +82,9 @@ public class PlayState  extends State{
         wagon.detectFall(floor);
 
         if(wagon.getPosition().y <= 0)
+            gsm.set(new LostState(gsm, wagon.getScore()));
+
+        if(wagon.hasLost())
             gsm.set(new LostState(gsm, wagon.getScore()));
 
 
@@ -95,7 +97,7 @@ public class PlayState  extends State{
         sb.draw(sky, cam.position.x - (cam.viewportWidth  / 2), 0, WagOn.WIDTH, WagOn.HEIGHT);
         sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());
         sb.draw(bomb.getTex(), bomb.getPosition().x, bomb.getPosition().y, bomb.getWidth(), bomb.getHeight());
-        sb.draw(wagon.getTex(), wagon.getPosition().x, wagon.getPosition().y, wagon.getWidth(), wagon.getHeight());
+        wagon.render(sb);
         floor.render(sb);
 
         String strScore = ((Integer)wagon.getScore()).toString();

@@ -33,6 +33,7 @@ public class Bomb extends FallingObj {
     public boolean detectCollision(Wagon wagon) {
         if(wagon.getBounds().overlaps(bounds)){
             reposition();
+            wagon.destroy();
             return true;
         }
         return false;

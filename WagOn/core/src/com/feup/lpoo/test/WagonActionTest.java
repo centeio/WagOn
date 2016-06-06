@@ -106,4 +106,22 @@ public class WagonActionTest{
         assertTrue(wagon.getVelocity().y < 200);
 
     }
+
+    @Test
+    public void testReset(){
+        Wagon wagon = new Wagon("wagon2.png");
+
+        assertTrue(wagon.getState() instanceof Moving);
+
+        assertEquals(0, wagon.getVelocity().x, 0.01);
+        assertEquals(WagOn.WIDTH/2 - Wagon.WIDTH/2, wagon.getPosition().x,0.01);
+        wagon.jump();
+        assertTrue(wagon.getState() instanceof Jumping);
+        assertEquals(200, wagon.getVelocity().y, 0.05);
+
+        wagon.reset();
+        assertEquals(0, wagon.getVelocity().x, 0.01);
+        assertEquals(WagOn.WIDTH/2 - Wagon.WIDTH/2, wagon.getPosition().x,0.01);
+        assertTrue(wagon.getState() instanceof Moving);
+    }
 }
