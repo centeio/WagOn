@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.feup.lpoo.WagOn;
 
@@ -32,7 +33,7 @@ public class MenuState extends State {
     public MenuState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
-        background = new Texture("bg.png");
+        background = new Texture("sky.png");
 
         Texture playBtn = new Texture("playbtn.png");
         Texture playMPBtn = new Texture("playbtn.png");
@@ -91,6 +92,11 @@ public class MenuState extends State {
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
+
+        GlyphLayout layout = new GlyphLayout(titleFont, strings.get("game"));
+
+        titleFont.draw(sb, layout, (WagOn.WIDTH - layout.width) / 2, 3*WagOn.HEIGHT/ 4);
+
         playButton.render(sb);
         playMPButton.render(sb);
         finishButton.render(sb);
