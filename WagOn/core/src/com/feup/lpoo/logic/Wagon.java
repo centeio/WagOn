@@ -1,5 +1,9 @@
 package com.feup.lpoo.logic;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.feup.lpoo.WagOn;
 import com.feup.lpoo.WagonStates.*;
 
@@ -17,6 +21,46 @@ public class Wagon extends Piece {
     protected int score = 0;                /**Wagon's score <p>number of fruit caugth</p>*/
     WagonState state;                       /**Wagon's state*/
 
+    Array<TextureRegion> frames;            /**animation frames*/
+    float maxFrameTime;                     /**maximum time passed per frame*/
+    float currentFrameTime;                 /**time in current passed in frame*/
+    int frame;                              /**index of current frame*/
+    boolean destroyed;                      /**is wagon destroyed (is animation on)?*/
+
+
+    /**
+     * Prepares the sprite for animation
+     * @param region sprite image
+     * @param frameCount number of frames in sprite
+     * @param cycleTime animation duration
+     */
+    private void prepareAnimation(TextureRegion region, int frameCount, float cycleTime){
+        frames = new Array<TextureRegion>();
+        TextureRegion temp;
+        int frameWidth = region.getRegionWidth() / frameCount;
+        for(int i = 0; i < frameCount; i++){
+            temp = new TextureRegion(region, i * frameWidth, 0, frameWidth, region.getRegionHeight());
+            frames.add(temp);
+        }
+        maxFrameTime = cycleTime / frameCount;
+        frame = 0;
+    }
+
+    /**
+     * Updates frame to be drawn next
+     * @param dt time since last update
+     */
+    private void updateAnimation(float dt){
+        currentFrameTime += dt;
+        if(currentFrameTime > maxFrameTime){
+            frame++;
+            currentFrameTime = 0;
+        }
+        if(frame >= frames.size)
+            frame = frames.size;
+
+    }
+
     /**
      * Default constructor for class Wagon.
      * <p>Initializes wagon in the bottom centre of the screen with default Texture</p>
@@ -24,7 +68,11 @@ public class Wagon extends Piece {
     public Wagon() {
         super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, "wagon.png", WIDTH,  HEIGHT);
 
+        prepareAnimation(new TextureRegion(new Texture("wagon destruction.png")), 5, 1f);
+
         state = new com.feup.lpoo.WagonStates.Moving(this);
+
+        destroyed = false;
     }
 
     /**
@@ -35,6 +83,11 @@ public class Wagon extends Piece {
      */
     public Wagon(String texture) {
         super(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT, texture, WIDTH,  HEIGHT);
+
+        if(texture.equals("wagon.png"))
+            prepareAnimation(new TextureRegion(new Texture("wagon destruction.png")), 5, 1f);
+        else
+            prepareAnimation(new TextureRegion(new Texture("wagon2 destruction.png")), 5, 1f);
 
         state = new com.feup.lpoo.WagonStates.Moving(this);
     }
@@ -61,6 +114,9 @@ public class Wagon extends Piece {
             position.x = WagOn.WIDTH - width;
             velocity.x = 0;
         }
+
+        if(destroyed)
+            updateAnimation(dt);
 
         bounds.setPosition(position.x, position.y);
     }
@@ -162,5 +218,35 @@ public class Wagon extends Piece {
         position.set(WagOn.WIDTH/2 -WIDTH/2, Floor.GROUND_HEIGHT);
         state = new Moving(this);
         score = 0;
+        frame = 0;
+        destroyed = false;
+        currentFrameTime = 0;
+    }
+
+    /**
+     * Destroys wagon by changing it's state
+     */
+    public void destroy(){
+        state = new Lost(this);
+        destroyed = true;
+    }
+
+    /**
+     * Checks if destruction animation is over
+     * @return whether destruction animation is over
+     */
+    public boolean hasLost(){
+        return (destroyed && frame == frames.size);
+    }
+
+    /**
+     * Draws wagon in Sprite Batch
+     * @param sb sprite batch
+     */
+    public void render(SpriteBatch sb){
+        if(destroyed)
+            sb.draw(frames.get(frame),position.x, position.y, width, height);
+        else
+            sb.draw(tex,position.x, position.y, width, height);
     }
 }

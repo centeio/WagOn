@@ -43,12 +43,12 @@ public class MenuState extends State {
         playMPButton = new GameButton(playMPBtn, 0, WagOn.HEIGHT/4, cam);
         finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
 
-        /*if(playState == null) {
+        if(playState == null) {
             playState = new PlayState(gsm);
         }
         else{
             playState.reset();
-        }*/
+        }
 
         /*if(multiPlayerState == null) {
             multiPlayerState = new MultiPlayerState(gsm, false);
@@ -66,7 +66,7 @@ public class MenuState extends State {
 
         if(playButton.isClicked()){
             clickSound.play();
-            gsm.set(new MultiPlayerState(gsm, false));
+            gsm.set(playState);
         }
 
         if(playMPButton.isClicked()){
