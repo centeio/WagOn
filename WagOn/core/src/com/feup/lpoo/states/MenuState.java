@@ -18,9 +18,13 @@ public class MenuState extends State {
 
     private GameButton playButton;
 
+    private GameButton playMPButton;
+
     private GameButton finishButton;
 
     private static PlayState playState = null;
+
+    private static MultiPlayerState multiPlayerState = null;
 
     private Sound clickSound;
 
@@ -31,17 +35,27 @@ public class MenuState extends State {
         background = new Texture("bg.png");
 
         Texture playBtn = new Texture("playbtn.png");
+        Texture playMPBtn = new Texture("playbtn.png");
         Texture stopBtn = new Texture("endbtn.png");
 
         playButton = new GameButton(playBtn, WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
+        playMPButton = new GameButton(playMPBtn, 0, WagOn.HEIGHT/4, cam);
         finishButton = new GameButton(stopBtn, 2*WagOn.WIDTH/3, WagOn.HEIGHT/4, cam);
 
-        if(playState == null) {
+        /*if(playState == null) {
             playState = new PlayState(gsm);
         }
         else{
             playState.reset();
+        }*/
+
+        /*if(multiPlayerState == null) {
+            multiPlayerState = new MultiPlayerState(gsm, false);
         }
+        else{
+            //multiPlayerState.reset();
+        }*/
+
         clickSound = Gdx.audio.newSound(Gdx.files.internal("mouse.wav"));
 
     }
@@ -51,7 +65,12 @@ public class MenuState extends State {
 
         if(playButton.isClicked()){
             clickSound.play();
-            gsm.set(playState);
+            gsm.set(new MultiPlayerState(gsm, false));
+        }
+
+        if(playMPButton.isClicked()){
+            clickSound.play();
+            gsm.set(new MultiPlayerState(gsm, true));
         }
 
         if(finishButton.isClicked()){
@@ -63,6 +82,7 @@ public class MenuState extends State {
     public void update(float dt) {
         handleInput();
         playButton.update(dt);
+        playMPButton.update(dt);
         finishButton.update(dt);
     }
 
@@ -72,6 +92,7 @@ public class MenuState extends State {
         sb.begin();
         sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
         playButton.render(sb);
+        playMPButton.render(sb);
         finishButton.render(sb);
         sb.end();
     }
@@ -80,5 +101,6 @@ public class MenuState extends State {
     public void dispose() {
         background.dispose();
         playButton.dispose();
+        playMPButton.dispose();
     }
 }

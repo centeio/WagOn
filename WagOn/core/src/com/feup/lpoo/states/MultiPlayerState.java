@@ -1,9 +1,5 @@
 package com.feup.lpoo.states;
 
-/**
- * Created by inesf on 04/06/2016.
- */
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
@@ -18,22 +14,16 @@ import com.feup.lpoo.logic.Floor;
 import com.feup.lpoo.logic.Fruit;
 import com.feup.lpoo.logic.Wagon;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.feup.lpoo.WagOn;
-import com.feup.lpoo.WagonStates.Falling;
-import com.feup.lpoo.logic.*;
+import com.feup.lpoo.network.ClientCallbackInterface;
+import com.feup.lpoo.network.ServerInterface;
 
-/**
- * Created by inesf on 11/05/2016.
- */
-public class MultiPlayerState  extends State{
+import java.net.InetAddress;
+
+import lipermi.handler.CallHandler;
+import lipermi.net.Client;
+import lipermi.net.Server;
+
+public class MultiPlayerState  extends State implements ServerInterface, ClientCallbackInterface {
     private Texture sky;
     private Floor floor;
     private Wagon wagon1;
@@ -44,56 +34,92 @@ public class MultiPlayerState  extends State{
     private Sound bombSound;
     private Sound caughtSound;
 
-    public MultiPlayerState(GameStateManager gsm) {
+    private Boolean _isServer;
+    private ServerInterface _proxy;
+    private ClientCallbackInterface _c = null;
+
+    public MultiPlayerState(GameStateManager gsm, boolean isServer) {
         super(gsm);
+
+        _isServer = isServer;
         sky = new Texture("sky.png");
         floor = new Floor(31);
         wagon1 = new Wagon("wagon.png");
         wagon2 = new Wagon("wagon2.png");
+
         fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
         bomb = new Bomb();
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
         caughtSound = Gdx.audio.newSound(Gdx.files.internal("bump.wav"));
 
+        if (isServer){
+            try {
+                CallHandler callHandler = new CallHandler();
+                callHandler.registerGlobal(ServerInterface.class, this);
+                Server server = new Server();
+                int thePortIWantToBind = 4456;
+                server.bind(thePortIWantToBind, callHandler);
+                InetAddress IP = InetAddress.getLocalHost();
+                System.err.println("Server ready at " + IP.getHostAddress() + " port " + 4456);
+            } catch (Exception e) {
+                System.err.println("Server exception: " + e.toString());
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                // get proxy for remote chat server
+                CallHandler callHandler = new CallHandler();
+                String remoteHost = "192.168.1.171";
+                int portWasBinded = 4456;
+                Client client = new Client(remoteHost, portWasBinded, callHandler);
+                _proxy = (ServerInterface)client.getGlobal(ServerInterface.class);
 
+                // create and expose remote listener
+                callHandler.exportObject(ClientCallbackInterface.class, this);
+                _proxy.join(this);
+
+            } catch (Exception e) {
+                System.err.println("Client exception: " + e.toString());
+                e.printStackTrace();
+            }
+        }
     }
+
+    private boolean _updated = false;
 
     @Override
     protected void handleInput() {
-        if(!(wagon1.getState() instanceof Falling)) {
-            if (Gdx.input.justTouched()){
+
+        Wagon wagon = _isServer ? wagon1 : wagon2;
+
+        if(!(wagon.getState() instanceof Falling)) {
+            _updated = false;
+
+            if (Gdx.input.justTouched()) {
                 jumpSound.play();
-                wagon1.jump();
+                wagon.jump();
+                _updated = true;
             }
+
             if (WagOn.isMobile) {
                 float acc = Gdx.input.getAccelerometerY();
 
-                wagon1.updateOnAccelerometer(2*acc);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-                wagon1.updateOnAccelerometer(5);
-            else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-                wagon1.updateOnAccelerometer(-5);
-            else
-                wagon1.updateOnAccelerometer(0);
+                wagon.updateOnAccelerometer(2 * acc);
+                _updated = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) {
+                wagon.updateOnAccelerometer(5);
+                _updated = true;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) {
+                wagon.updateOnAccelerometer(-5);
+                _updated = true;
+            } else
+                wagon.updateOnAccelerometer(0);
+
+
         }
 
-        if(!(wagon2.getState() instanceof Falling)) {
-            if (Gdx.input.justTouched()){
-                jumpSound.play();
-                wagon2.jump();
-            }
-            if (WagOn.isMobile) {
-                float acc = Gdx.input.getAccelerometerY();
 
-                wagon2.updateOnAccelerometer(2*acc);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S))
-                wagon2.updateOnAccelerometer(5);
-            else if (Gdx.input.isKeyPressed(Input.Keys.A))
-                wagon2.updateOnAccelerometer(-5);
-            else
-                wagon2.updateOnAccelerometer(0);
-        }
     }
 
     @Override
@@ -103,6 +129,16 @@ public class MultiPlayerState  extends State{
         wagon2.update(dt);
         fruit.update(dt);
         bomb.update(dt);
+
+        if (_updated) {
+            if (_isServer) {
+                if (_c != null) _c.move2(wagon1.getPosition().x, wagon1.getPosition().y);
+            } else {
+                _proxy.move1(wagon2.getPosition().x, wagon2.getPosition().y);
+            }
+
+            _updated = false;
+        }
 
         if(fruit.detectCollision(wagon1)){
             caughtSound.play();
@@ -127,8 +163,8 @@ public class MultiPlayerState  extends State{
 
         if(wagon1.getPosition().y <= 0)
             gsm.set(new LostState(gsm, wagon2.getScore()));
-        if(wagon1.getPosition().y <= 0)
-            gsm.set(new LostState(gsm, wagon2.getScore()));
+        if(wagon2.getPosition().y <= 0)
+            gsm.set(new LostState(gsm, wagon1.getScore()));
     }
 
     @Override
@@ -158,5 +194,20 @@ public class MultiPlayerState  extends State{
         wagon2.getTex().dispose();
         sky.dispose();
     }
-}
 
+    @Override
+    public void move2(float x, float y) {
+        wagon1.getPosition().set(x, y);
+    }
+
+
+    @Override
+    public void move1(float x, float y) {
+        wagon2.getPosition().set(x, y);
+    }
+
+    @Override
+    public void join(ClientCallbackInterface c) {
+        _c = c;
+    }
+}

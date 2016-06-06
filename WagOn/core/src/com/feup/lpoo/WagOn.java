@@ -38,6 +38,6 @@ public class WagOn extends ApplicationAdapter {
 	@Override
 	public void pause() {
 		super.pause();
-		gsm.push(new PauseState(gsm));
+		//gsm.push(new PauseState(gsm));
 	}
 }

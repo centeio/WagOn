@@ -3,6 +3,8 @@ package com.feup.lpoo.logic;
 import com.feup.lpoo.WagOn;
 import com.feup.lpoo.WagonStates.*;
 
+import java.io.Serializable;
+
 /**
  * Class representing a fruit catching wagon
  * @author Carolina Centeio e Ines Proenca

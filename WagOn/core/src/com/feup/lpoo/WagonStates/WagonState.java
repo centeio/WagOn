@@ -1,12 +1,15 @@
 package com.feup.lpoo.WagonStates;
 
+import com.badlogic.gdx.utils.Json;
 import com.feup.lpoo.logic.Wagon;
+
+import java.io.Serializable;
 
 /**
  * Class generalizing wagon's state
  * @author Carolina Centeio e Ines Proenca
  */
-public abstract class WagonState {
+public abstract class WagonState implements Serializable {
     protected static final int GRAVITY = -10;   /**Gravity constant*/
     protected Wagon wagon;                      /**Wagon who this state belong to*/
 

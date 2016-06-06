@@ -1,6 +1,5 @@
 package com.feup.lpoo.logic;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.feup.lpoo.WagOn;
