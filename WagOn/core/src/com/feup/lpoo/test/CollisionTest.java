@@ -12,7 +12,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by inesf on 01/06/2016.
+ * Class responsible for collision tests
+ * @author Carolina Centeio e Ines Proenca
  */
 public class CollisionTest {
     @Test
@@ -23,7 +24,7 @@ public class CollisionTest {
         float height;
 
         assertEquals(false,  floor.getTiles().first().isDestroyed());
-
+        bomb.update(10);
         bomb.startFall();
         do{
             height = bomb.getPosition().y;
@@ -45,6 +46,7 @@ public class CollisionTest {
         float height;
         boolean collided;
 
+        bomb.update(10);
         bomb.startFall();
 
         do{

@@ -8,6 +8,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Class responsible for testing wagon's reactions
+ * @author Carolina Centeio e Ines Proenca
+ */
 public class WagonActionTest{
     @Test
     public void testStatic(){
