@@ -74,10 +74,15 @@ public abstract class FallingObj extends Piece{
      * Detects collision between object and floor
      * @param floor floor which may have colided
      */
-    public abstract void detectCollision(Floor floor);
+    public abstract boolean detectCollision(Floor floor);
 
     @Override
     public void reset() {
        reposition();
     }
+
+    public void setStartTime(long s) {startTime=s;};
+
+    public long getStartTime() {return startTime;};
+
 }

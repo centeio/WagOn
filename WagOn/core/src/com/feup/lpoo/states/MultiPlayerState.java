@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.feup.lpoo.WagOn;
 import com.feup.lpoo.WagonStates.Falling;
 import com.feup.lpoo.logic.Bomb;
@@ -50,7 +51,8 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         floor = new Floor(31);
         wagon1 = new Wagon("wagon.png");
         wagon2 = new Wagon("wagon2.png");
-
+        fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
+        bomb = new Bomb();
 
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
@@ -59,8 +61,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         if (isServer) {
             id=0;
             System.out.println("id server " + id);
-            fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
-            bomb = new Bomb();
+
             try {
                 CallHandler callHandler = new CallHandler();
                 callHandler.registerGlobal(ServerInterface.class, this);
@@ -169,13 +170,20 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         }
 
 
-        if (fruit.detectCollision(wagon1)) {
+        if (fruit.detectCollision(wagon1) || fruit.detectCollision(wagon2)) {
             caughtSound.play();
+            if(_isServer){
+                _c1.syncFruit(fruit.getStartTime(),fruit.getPosition());
+                _c2.syncFruit(fruit.getStartTime(),fruit.getPosition());
+
+            }
         }
-        if (fruit.detectCollision(wagon2)) {
-            caughtSound.play();
+
+        if(fruit.detectCollision(floor) && _isServer){
+            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
+            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
         }
-        fruit.detectCollision(floor);
+
 
         if (bomb.detectCollision(wagon1)) {
             bombSound.play();
@@ -185,7 +193,10 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             bombSound.play();
             gsm.set(new LostState(gsm, wagon2.getScore()));
         }
-        bomb.detectCollision(floor);
+        if(bomb.detectCollision(floor) && _isServer){
+            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
+            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
+        }
 
         wagon1.detectFall(floor);
         wagon2.detectFall(floor);
@@ -263,5 +274,18 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
 
         System.out.println("too many clients");
         return -1;
+    }
+
+    @Override
+    public void syncFruit(long startime, Vector2 p){
+        fruit.setStartTime(startime);
+        fruit.setPosition(p);
+
+    }
+
+    @Override
+    public void syncBomb(long startime, Vector2 p){
+        bomb.setStartTime(startime);
+        bomb.setPosition(p);
     }
 }

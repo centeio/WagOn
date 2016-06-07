@@ -35,13 +35,16 @@ public class Bomb extends FallingObj {
     }
 
     @Override
-    public void detectCollision(Floor floor) {
+    public boolean detectCollision(Floor floor) {
         if (position.y < Floor.GROUND_HEIGHT) {
             floor.destroyTile(position.x);
             floor.destroyTile(position.x + FallingObj.WIDTH);
         }
-        if(position.y + HEIGHT <0)
+        if(position.y + HEIGHT <0){
             reposition();
+            return true;
+        }
+        return false;
     }
 
     /**

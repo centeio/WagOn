@@ -110,4 +110,6 @@ public abstract class Piece {
      * Resets piece to it's original state
      */
     public abstract void reset();
+
+    public void setPosition(Vector2 p){position.x=p.x; position.y=p.y;}
 }

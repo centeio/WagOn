@@ -48,9 +48,11 @@ public class Fruit extends FallingObj {
     }
 
     @Override
-    public void detectCollision(Floor floor) {
+    public boolean detectCollision(Floor floor) {
         if (position.y + HEIGHT < 0) {
             reposition();
+            return true;
         }
+        return false;
     }
 }
