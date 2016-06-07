@@ -16,6 +16,7 @@ public abstract class FallingObj extends Piece{
     private static final int GRAVITY = -2;  /**Gravity affecting FallingObj*/
 
     protected long startTime = 0;           /**Time to start falling in milliseconds*/
+    private boolean first;
 
     /**
      * Constructor for class FallingObj
@@ -26,10 +27,15 @@ public abstract class FallingObj extends Piece{
     protected FallingObj(int x, String tex, int h) {
         super(x, WagOn.HEIGHT, tex,  WIDTH,  h);
         acceleration.y = GRAVITY;
+        first = true;
     }
 
     @Override
     public void update(float dt){
+        if(first){
+            reposition();
+            first = false;
+        }
         if(startTime <= TimeUtils.millis()) {
             velocity.add(acceleration);
             velocity.scl(dt);
@@ -37,6 +43,9 @@ public abstract class FallingObj extends Piece{
             velocity.scl(1 / dt);
         }
         bounds.setPosition(position.x, position.y);
+
+        if(position.y < 0)
+            reposition();
     }
 
     /**

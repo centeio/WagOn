@@ -1,7 +1,9 @@
 package com.feup.lpoo.logic;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.feup.lpoo.WagOn;
 
 /**
  * Class representing falling fruit
@@ -20,9 +22,19 @@ public class Fruit extends FallingObj {
         startTime = TimeUtils.millis();
     }
 
+    /**
+     * Constructor for class Fruit
+     */
+    public Fruit() {
+        super(0, "melon.png",HEIGHT);
+
+        reposition();
+    }
+
     @Override
     protected void updateStartTime() {
-        startTime = TimeUtils.millis();
+        int r = MathUtils.random(0, 4);
+        startTime = TimeUtils.millis() + r*250;
     }
 
     @Override

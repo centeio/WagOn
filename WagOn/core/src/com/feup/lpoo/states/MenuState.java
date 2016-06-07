@@ -6,14 +6,19 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.feup.lpoo.WagOn;
+import com.feup.lpoo.logic.FallingObj;
+import com.feup.lpoo.logic.Fruit;
+
+import java.util.Random;
 
 /**
  * Created by inesf on 11/05/2016.
  */
 public class MenuState extends State {
-
-    private static final int PLAY_HEIGHT = 20;
 
     private Texture background;
 
@@ -22,6 +27,8 @@ public class MenuState extends State {
     private GameButton playMPButton;
 
     private GameButton finishButton;
+
+    private Array<Fruit> fruits;
 
     private static PlayState playState = null;
 
@@ -32,8 +39,12 @@ public class MenuState extends State {
 
     public MenuState(GameStateManager gsm) {
         super(gsm);
-        cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
         background = new Texture("sky.png");
+
+        fruits = new Array<Fruit>();
+
+        for(int i = 0; i < 5; i++)
+            fruits.add(new Fruit());
 
         Texture playBtn = new Texture("playbtn.png");
         Texture playMPBtn = new Texture("multi.png");
@@ -95,6 +106,9 @@ public class MenuState extends State {
         playButton.update(dt);
         playMPButton.update(dt);
         finishButton.update(dt);
+
+        for(Fruit fruit: fruits)
+            fruit.update(dt);
     }
 
     @Override
@@ -110,6 +124,9 @@ public class MenuState extends State {
         playButton.render(sb);
         playMPButton.render(sb);
         finishButton.render(sb);
+
+        for(Fruit fruit: fruits)
+            sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());
         sb.end();
     }
 

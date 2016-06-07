@@ -16,11 +16,6 @@ public class Bomb extends FallingObj {
      */
     public Bomb() {
         super(0, "bomb.png", HEIGHT);
-
-        if(startTime == 0)
-            reposition();
-        else
-            startTime = TimeUtils.millis();
     }
 
     @Override
