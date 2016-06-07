@@ -1,5 +1,6 @@
 com.feup.lpoo
 com.feup.lpoo.WagonStates
 com.feup.lpoo.logic
+com.feup.lpoo.network
 com.feup.lpoo.states
 com.feup.lpoo.test
