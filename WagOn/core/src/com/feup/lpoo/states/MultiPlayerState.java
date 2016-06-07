@@ -51,15 +51,16 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         wagon1 = new Wagon("wagon.png");
         wagon2 = new Wagon("wagon2.png");
 
-        fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
-        bomb = new Bomb();
+
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
         caughtSound = Gdx.audio.newSound(Gdx.files.internal("bump.wav"));
 
         if (isServer) {
+            id=0;
             System.out.println("id server " + id);
-
+            fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
+            bomb = new Bomb();
             try {
                 CallHandler callHandler = new CallHandler();
                 callHandler.registerGlobal(ServerInterface.class, this);
@@ -77,7 +78,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             try {
                 // get proxy for remote chat server
                 CallHandler callHandler = new CallHandler();
-                String remoteHost = "192.168.1.8";
+                String remoteHost = "192.168.1.171";
                 int portWasBinded = 4456;
                 Client client = new Client(remoteHost, portWasBinded, callHandler);
                 _proxy = (ServerInterface) client.getGlobal(ServerInterface.class);
@@ -104,10 +105,16 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             return;
 
         Wagon wagon;
-        if(id==1)
+        if(id==1){
             wagon = wagon1;
-        else
+            System.out.println(id+" wagon1");
+        }
+        else {
             wagon = wagon2;
+            System.out.println(id+" wagon2");
+        }
+
+
 
         if (!(wagon.getState() instanceof Falling)) {
             _updated = false;
@@ -153,7 +160,10 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         } */
 
         if (!_isServer && _updated) {
-            _proxy.move(id, wagon1.getPosition().x, wagon1.getPosition().y);
+            if(id==1)
+                _proxy.move(id, wagon1.getPosition().x, wagon1.getPosition().y);
+            else if (id==2)
+                _proxy.move(id, wagon2.getPosition().x, wagon2.getPosition().y);
             _updated = false;
         }
 
@@ -217,7 +227,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
     public void moveC(int id, float x, float y) {
         if(id==1)
             wagon1.getPosition().set(x, y);
-        else
+        else if(id==2)
             wagon2.getPosition().set(x, y);
 
     }
