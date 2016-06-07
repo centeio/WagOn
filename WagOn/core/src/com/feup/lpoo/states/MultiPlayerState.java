@@ -21,6 +21,7 @@ import com.feup.lpoo.logic.Wagon;
 import com.feup.lpoo.network.ClientCallbackInterface;
 import com.feup.lpoo.network.ServerInterface;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 import lipermi.handler.CallHandler;
@@ -46,7 +47,8 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
     private ClientCallbackInterface _c2 = null;
 
 
-
+    Server server;
+    Client client;
 
     public MultiPlayerState(GameStateManager gsm, boolean isServer, String ip) {
         super(gsm);
@@ -72,11 +74,13 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             try {
                 CallHandler callHandler = new CallHandler();
                 callHandler.registerGlobal(ServerInterface.class, this);
-                Server server = new Server();
+                server = new Server();
                 int thePortIWantToBind = 2009;
                 server.bind(thePortIWantToBind, callHandler);
                 InetAddress IP = InetAddress.getLocalHost();
                 System.err.println("Server ready at " + IP.getHostAddress() + " port " + 2009);
+
+
             } catch (Exception e) {
                 System.err.println("Server exception: " + e.toString());
                 e.printStackTrace();
@@ -90,14 +94,13 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
                 CallHandler callHandler = new CallHandler();
 
                 int portWasBinded = 2009;
-                Client client = new Client(ip, portWasBinded, callHandler);
+                client = new Client(ip, portWasBinded, callHandler);
                 _proxy = (ServerInterface) client.getGlobal(ServerInterface.class);
 
                 // create and expose remote listener
                 callHandler.exportObject(ClientCallbackInterface.class, this);
                 id = _proxy.join(this);
                 System.out.println("created client "+id);
-
 
             } catch (Exception e) {
                 System.err.println("Client exception: " + e.toString());
@@ -116,16 +119,16 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             return;
         System.out.println("entra android handle");
 
-            if (Gdx.input.justTouched()) {
-                jumpSound.play();
-                _proxy.jumpWagon(id);
-            }
+        if (Gdx.input.justTouched()) {
+            jumpSound.play();
+            _proxy.jumpWagon(id);
+        }
 
-            if (WagOn.isMobile) {
-                float acc = Gdx.input.getAccelerometerY();
-                _proxy.accWagon(id, acc);
-            } else
-                _proxy.accWagon(id, 0);
+        if (WagOn.isMobile) {
+            float acc = Gdx.input.getAccelerometerY();
+            _proxy.accWagon(id, acc);
+        } else
+            _proxy.accWagon(id, 0);
         System.out.println("sai android handle");
 
 
@@ -214,11 +217,11 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
 
         if(_isServer){
 
-        strScore = "PINK " +((Integer) wagon1.getScore()).toString();
-        font.draw(sb, strScore, WagOn.WIDTH - strScore.length() * State.font_size, WagOn.HEIGHT - 10);
+            strScore = "PINK " +((Integer) wagon1.getScore()).toString();
+            font.draw(sb, strScore, WagOn.WIDTH - strScore.length() * State.font_size, WagOn.HEIGHT - 10);
 
-        strScore = "PURPLE " + ((Integer) wagon2.getScore()).toString();
-        font.draw(sb, strScore, 10, WagOn.HEIGHT - 10);
+            strScore = "PURPLE " + ((Integer) wagon2.getScore()).toString();
+            font.draw(sb, strScore, 10, WagOn.HEIGHT - 10);
         }
         else {
 
@@ -235,12 +238,19 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
 
     @Override
     public void dispose() {
-       if(_isServer){
-        fruit.getTex().dispose();
-        bomb.getTex().dispose();
-        wagon1.getTex().dispose();
-        wagon2.getTex().dispose();
-       }
+        if(_isServer){
+            fruit.getTex().dispose();
+            bomb.getTex().dispose();
+            wagon1.getTex().dispose();
+            wagon2.getTex().dispose();
+            server.close();
+        } else {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         sky.dispose();
     }
 
@@ -249,7 +259,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         if (_c1 == null) {
             _c1 = c;
             System.out.println("c1 connected");
-             return 1;
+            return 1;
         } else if (_c2 == null) {
             _c2 = c;
             System.out.println("c2 connected");
@@ -273,9 +283,9 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
     @Override
     public void jumpWagon(int id){
         if(id==1 && !(wagon1.getState() instanceof Falling))
-           wagon1.jump();
+            wagon1.jump();
         else if(id==2 && !(wagon2.getState() instanceof Falling))
-           wagon2.jump();
+            wagon2.jump();
     }
 
     @Override
