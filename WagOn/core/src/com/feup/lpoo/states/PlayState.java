@@ -37,7 +37,7 @@ public class PlayState  extends State{
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
         caughtSound = Gdx.audio.newSound(Gdx.files.internal("bump.wav"));
-
+        fruit.setSinglePlayer();
 
     }
 

@@ -16,7 +16,7 @@ public abstract class FallingObj extends Piece{
     private static final int GRAVITY = -2;  /**Gravity affecting FallingObj*/
 
     protected long startTime = 0;           /**Time to start falling in milliseconds*/
-    private boolean first;
+    protected boolean first;
 
     /**
      * Constructor for class FallingObj
