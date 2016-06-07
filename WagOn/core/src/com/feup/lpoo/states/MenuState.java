@@ -1,6 +1,7 @@
 package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -64,15 +65,6 @@ public class MenuState extends State {
 
         }
 
-        /*if(multiPlayerState == null) {
-            multiPlayerState = new MultiPlayerState(gsm, false);
-        }
-
-
-       /* else{
-            multiPlayerState.reset();
-        }*/
-
         clickSound = Gdx.audio.newSound(Gdx.files.internal("mouse.wav"));
 
     }
@@ -87,14 +79,27 @@ public class MenuState extends State {
 
         if(playMPButton.isClicked()){
             clickSound.play();
-            if(multiPlayerState == null) {
-                if(WagOn.isMobile)
-                    multiPlayerState = new MultiPlayerState(gsm, false);
-                else
-                    multiPlayerState = new MultiPlayerState(gsm, true);
+
+            if(WagOn.isMobile)
+
+            Gdx.input.getTextInput(new Input.TextInputListener() {
+                @Override
+                public void input(String text) {
+                    multiPlayerState = new MultiPlayerState(gsm, false, text);
+
+                    gsm.set(multiPlayerState);
+                }
+                @Override
+                public void canceled() {
+
+                }
+            }, "Choose Server", "172.30.4.107", "IP Address");
+            else{
+                multiPlayerState = new MultiPlayerState(gsm, true, "");
+                gsm.set(multiPlayerState);
 
             }
-            gsm.set(multiPlayerState);
+
         }
 
         if(finishButton.isClicked()){
