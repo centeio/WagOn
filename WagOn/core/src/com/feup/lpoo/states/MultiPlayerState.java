@@ -62,6 +62,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             id=0;
             System.out.println("id server " + id);
 
+
             try {
                 CallHandler callHandler = new CallHandler();
                 callHandler.registerGlobal(ServerInterface.class, this);
@@ -144,6 +145,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         wagon2.update(dt);
         fruit.update(dt);
         bomb.update(dt);
+        boolean sync=true;
 
         /*if (_updated) {
             if (id == 1) {
@@ -172,16 +174,11 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
 
         if (fruit.detectCollision(wagon1) || fruit.detectCollision(wagon2)) {
             caughtSound.play();
-            if(_isServer){
-                _c1.syncFruit(fruit.getStartTime(),fruit.getPosition());
-                _c2.syncFruit(fruit.getStartTime(),fruit.getPosition());
-
-            }
+            sync=false;
         }
 
         if(fruit.detectCollision(floor) && _isServer){
-            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
-            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
+            sync=false;
         }
 
 
@@ -194,8 +191,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             gsm.set(new LostState(gsm, wagon2.getScore()));
         }
         if(bomb.detectCollision(floor) && _isServer){
-            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
-            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
+            sync=false;
         }
 
         wagon1.detectFall(floor);
@@ -205,6 +201,13 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             gsm.set(new LostState(gsm, wagon2.getScore()));
         if (wagon2.getPosition().y <= 0)
             gsm.set(new LostState(gsm, wagon1.getScore()));
+
+        if(!sync && _isServer){
+            _c1.syncFruit(fruit.getStartTime(),fruit.getPosition());
+            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
+            _c2.syncFruit(fruit.getStartTime(),fruit.getPosition());
+            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
+        }
     }
 
     @Override
@@ -264,10 +267,14 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
     public int join(ClientCallbackInterface c) {
         if (_c1 == null) {
             _c1 = c;
+            _c1.syncFruit(fruit.getStartTime(),fruit.getPosition());
+            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
 
             return 1;
         } else if (_c2 == null) {
             _c2 = c;
+            _c2.syncFruit(fruit.getStartTime(),fruit.getPosition());
+            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
 
             return 2;
         }
