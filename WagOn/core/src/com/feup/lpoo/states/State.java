@@ -19,7 +19,7 @@ import java.util.Locale;
 public abstract class State {
     public static final int font_size = 50;
     public static final int title_size = 150;
-    protected static OrthographicCamera cam;
+    protected OrthographicCamera cam = null;
     protected Vector3 mouse;
     protected GameStateManager gsm;
     protected static BitmapFont font = null;
@@ -31,8 +31,6 @@ public abstract class State {
         FileHandle baseFileHandle = Gdx.files.internal("MyBundle");
         Locale locale = Locale.getDefault();
         strings = I18NBundle.createBundle(baseFileHandle,locale);
-        cam = new OrthographicCamera();
-        cam.setToOrtho(false, WagOn.WIDTH,WagOn.HEIGHT);
     }
 
     private void initializeFonts(){
@@ -61,6 +59,9 @@ public abstract class State {
 
         if(strings == null)
             initializeBundle();
+
+            cam = new OrthographicCamera();
+            cam.setToOrtho(false, WagOn.WIDTH,WagOn.HEIGHT);
 
     }
 

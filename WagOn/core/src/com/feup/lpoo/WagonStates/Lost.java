@@ -10,17 +10,18 @@ import com.feup.lpoo.logic.Wagon;
 public class Lost extends WagonState {
     /**
      * Constructor for Jumping state.
-     * <p>Sets wagon velocity in x axis to 0</p>
+     * <p>Sets wagon velocity and acceleration in x axis to 0</p>
      * @param wagon wagon in this state
      */
     public Lost(Wagon wagon) {
         super(wagon);
+        wagon.setAccelerationX(0);
         wagon.setVelocityX(0);
     }
 
     @Override
     public void update(float acc) {
-
+        System.out.println("Dont move");
     }
 
     @Override

@@ -77,7 +77,7 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
             try {
                 // get proxy for remote chat server
                 CallHandler callHandler = new CallHandler();
-                String remoteHost = "192.168.1.8";
+                String remoteHost = "192.168.56.1";
                 int portWasBinded = 4456;
                 Client client = new Client(remoteHost, portWasBinded, callHandler);
                 _proxy = (ServerInterface) client.getGlobal(ServerInterface.class);
