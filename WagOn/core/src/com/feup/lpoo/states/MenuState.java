@@ -41,6 +41,8 @@ public class MenuState extends State {
         super(gsm);
         background = new Texture("sky.png");
 
+        //cam.setToOrtho(false, WagOn.WIDTH, WagOn.HEIGHT);
+
         fruits = new Array<Fruit>();
 
         for(int i = 0; i < 5; i++)
@@ -114,8 +116,10 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
 
+        sb.setProjectionMatrix(cam.combined);
+
         sb.begin();
-        sb.draw(background, 0 , 0, WagOn.WIDTH, WagOn.HEIGHT);
+        sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
 
         for(Fruit fruit: fruits)
             sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());

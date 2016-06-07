@@ -60,8 +60,8 @@ public abstract class State {
         if(strings == null)
             initializeBundle();
 
-            cam = new OrthographicCamera();
-            cam.setToOrtho(false, WagOn.WIDTH,WagOn.HEIGHT);
+        cam = new OrthographicCamera();
+        cam.setToOrtho(false, WagOn.WIDTH,WagOn.HEIGHT);
 
     }
 
