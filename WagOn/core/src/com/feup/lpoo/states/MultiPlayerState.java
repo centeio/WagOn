@@ -216,9 +216,9 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
     @Override
     public void moveC(int id, float x, float y) {
         if(id==1)
-            wagon2.getPosition().set(x, y);
-        else
             wagon1.getPosition().set(x, y);
+        else
+            wagon2.getPosition().set(x, y);
 
     }
 
