@@ -113,9 +113,12 @@ public class MenuState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
+
         sb.begin();
-        sb.draw(background, 0 , 0, cam.viewportWidth, cam.viewportHeight);
+        sb.draw(background, 0 , 0, WagOn.WIDTH, WagOn.HEIGHT);
+
+        for(Fruit fruit: fruits)
+            sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());
 
         GlyphLayout layout = new GlyphLayout(titleFont, strings.get("game"));
 
@@ -125,8 +128,6 @@ public class MenuState extends State {
         playMPButton.render(sb);
         finishButton.render(sb);
 
-        for(Fruit fruit: fruits)
-            sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());
         sb.end();
     }
 

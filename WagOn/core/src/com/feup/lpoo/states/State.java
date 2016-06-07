@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.feup.lpoo.WagOn;
 
 import java.util.Locale;
 
@@ -18,7 +19,7 @@ import java.util.Locale;
 public abstract class State {
     public static final int font_size = 50;
     public static final int title_size = 150;
-    protected OrthographicCamera cam;
+    protected static OrthographicCamera cam;
     protected Vector3 mouse;
     protected GameStateManager gsm;
     protected static BitmapFont font = null;
@@ -30,6 +31,8 @@ public abstract class State {
         FileHandle baseFileHandle = Gdx.files.internal("MyBundle");
         Locale locale = Locale.getDefault();
         strings = I18NBundle.createBundle(baseFileHandle,locale);
+        cam = new OrthographicCamera();
+        cam.setToOrtho(false, WagOn.WIDTH,WagOn.HEIGHT);
     }
 
     private void initializeFonts(){
