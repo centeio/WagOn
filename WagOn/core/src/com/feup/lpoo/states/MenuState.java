@@ -1,6 +1,7 @@
 package com.feup.lpoo.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,6 +14,8 @@ import com.feup.lpoo.WagOn;
 import com.feup.lpoo.logic.FallingObj;
 import com.feup.lpoo.logic.Fruit;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Random;
 
 /**
@@ -31,8 +34,6 @@ public class MenuState extends State {
     private Array<Fruit> fruits;
 
     private static PlayState playState = null;
-
-    private static MultiPlayerState multiPlayerState = null;
 
     private Sound clickSound;
 
@@ -64,15 +65,6 @@ public class MenuState extends State {
 
         }
 
-        /*if(multiPlayerState == null) {
-            multiPlayerState = new MultiPlayerState(gsm, false);
-        }
-
-
-       /* else{
-            multiPlayerState.reset();
-        }*/
-
         clickSound = Gdx.audio.newSound(Gdx.files.internal("mouse.wav"));
 
     }
@@ -87,14 +79,23 @@ public class MenuState extends State {
 
         if(playMPButton.isClicked()){
             clickSound.play();
-            if(multiPlayerState == null) {
-                if(WagOn.isMobile)
-                    multiPlayerState = new MultiPlayerState(gsm, false);
-                else
-                    multiPlayerState = new MultiPlayerState(gsm, true);
 
+            if(WagOn.isMobile)
+
+                Gdx.input.getTextInput(new Input.TextInputListener() {
+                    @Override
+                    public void input(String text) {
+                        gsm.set(new MultiPlayerState(gsm, false, text));
+                    }
+                    @Override
+                    public void canceled() {
+
+                    }
+                }, "Choose Server", "172.30.4.107", "IP Address");
+            else{
+                gsm.set(new MultiPlayerState(gsm, true, ""));
             }
-            gsm.set(multiPlayerState);
+
         }
 
         if(finishButton.isClicked()){
@@ -127,6 +128,15 @@ public class MenuState extends State {
         GlyphLayout layout = new GlyphLayout(titleFont, strings.get("game"));
 
         titleFont.draw(sb, layout, (WagOn.WIDTH - layout.width) / 2, 3*WagOn.HEIGHT/ 4);
+
+        if(!WagOn.isMobile){
+            try {
+                GlyphLayout layout2 = new GlyphLayout(font, InetAddress.getLocalHost().getHostAddress());
+                font.draw(sb, layout2, (WagOn.WIDTH - layout.width) / 2, 5*WagOn.HEIGHT/ 6);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }
 
         playButton.render(sb);
         playMPButton.render(sb);

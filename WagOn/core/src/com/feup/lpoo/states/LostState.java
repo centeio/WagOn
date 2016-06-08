@@ -25,9 +25,6 @@ public class LostState extends State{
         this.score = score;
         prefs = Gdx.app.getPreferences("My Preferences");
 
-        System.out.println("Lost state init ");
-        System.out.println("Lost " + prefs.getInteger("score",0));
-
         if(score > prefs.getInteger("score", 0)) {
             prefs.putInteger("score", score);
             System.out.println("after actual "+ prefs.getInteger("score",0));

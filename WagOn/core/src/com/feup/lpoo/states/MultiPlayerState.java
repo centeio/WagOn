@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.DefaultOnscreenKeyboard;
 import com.feup.lpoo.WagOn;
 import com.feup.lpoo.WagonStates.Falling;
 import com.feup.lpoo.logic.Bomb;
@@ -19,6 +21,7 @@ import com.feup.lpoo.logic.Wagon;
 import com.feup.lpoo.network.ClientCallbackInterface;
 import com.feup.lpoo.network.ServerInterface;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 import lipermi.handler.CallHandler;
@@ -35,24 +38,24 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
     private Sound jumpSound;
     private Sound bombSound;
     private Sound caughtSound;
-    private int id;
+    private int id, winnerid, winnerscore = 0;
 
-    private Boolean _isServer;
+    private Boolean _isServer, gameover;
     private ServerInterface _proxy;
 
     private ClientCallbackInterface _c1 = null;
     private ClientCallbackInterface _c2 = null;
 
-    public MultiPlayerState(GameStateManager gsm, boolean isServer) {
+
+    Server server;
+    Client client;
+
+    public MultiPlayerState(GameStateManager gsm, boolean isServer, String ip) {
         super(gsm);
 
         _isServer = isServer;
+        gameover = false;
         sky = new Texture("sky.png");
-        floor = new Floor(31);
-        wagon1 = new Wagon("wagon.png");
-        wagon2 = new Wagon("wagon2.png");
-        fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
-        bomb = new Bomb();
 
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bombSound = Gdx.audio.newSound(Gdx.files.internal("bomb.wav"));
@@ -61,16 +64,23 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
         if (isServer) {
             id=0;
             System.out.println("id server " + id);
+            floor = new Floor(31);
+            wagon1 = new Wagon("wagon.png");
+            wagon2 = new Wagon("wagon2.png");
+            fruit = new Fruit(MathUtils.random(0, WagOn.WIDTH - FallingObj.WIDTH));
+            bomb = new Bomb();
 
 
             try {
                 CallHandler callHandler = new CallHandler();
                 callHandler.registerGlobal(ServerInterface.class, this);
-                Server server = new Server();
-                int thePortIWantToBind = 4456;
+                server = new Server();
+                int thePortIWantToBind = 2009;
                 server.bind(thePortIWantToBind, callHandler);
                 InetAddress IP = InetAddress.getLocalHost();
-                System.err.println("Server ready at " + IP.getHostAddress() + " port " + 4456);
+                System.err.println("Server ready at " + IP.getHostAddress() + " port " + 2009);
+
+
             } catch (Exception e) {
                 System.err.println("Server exception: " + e.toString());
                 e.printStackTrace();
@@ -79,16 +89,18 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
 //            System.out.println("id player "+id);
             try {
                 // get proxy for remote chat server
-                CallHandler callHandler = new CallHandler();
-                String remoteHost = "192.168.1.171";
 
-                int portWasBinded = 4456;
-                Client client = new Client(remoteHost, portWasBinded, callHandler);
+
+                CallHandler callHandler = new CallHandler();
+
+                int portWasBinded = 2009;
+                client = new Client(ip, portWasBinded, callHandler);
                 _proxy = (ServerInterface) client.getGlobal(ServerInterface.class);
 
                 // create and expose remote listener
                 callHandler.exportObject(ClientCallbackInterface.class, this);
                 id = _proxy.join(this);
+                System.out.println("created client "+id);
 
             } catch (Exception e) {
                 System.err.println("Client exception: " + e.toString());
@@ -103,196 +115,193 @@ public class MultiPlayerState extends State implements ServerInterface, ClientCa
 
     @Override
     protected void handleInput() {
-
         if (_isServer)
             return;
+        System.out.println("entra android handle");
 
-        Wagon wagon;
-        if(id==1){
-            wagon = wagon1;
-            System.out.println(id+" wagon1");
-        }
-        else {
-            wagon = wagon2;
-            System.out.println(id+" wagon2");
+        if (Gdx.input.justTouched()) {
+            jumpSound.play();
+            _proxy.jumpWagon(id);
         }
 
+        if (WagOn.isMobile) {
+            float acc = Gdx.input.getAccelerometerY();
+            _proxy.accWagon(id, acc);
+        } else
+            _proxy.accWagon(id, 0);
+        System.out.println("sai android handle");
 
 
-        if (!(wagon.getState() instanceof Falling)) {
-            _updated = false;
-
-            if (Gdx.input.justTouched()) {
-                jumpSound.play();
-                wagon.jump();
-                _updated = true;
-            }
-
-            if (WagOn.isMobile) {
-                float acc = Gdx.input.getAccelerometerY();
-
-                wagon.updateOnAccelerometer(2 * acc);
-                _updated = true;
-            } else
-                wagon.updateOnAccelerometer(0);
-        }
     }
 
     @Override
     public void update(float dt) {
+        if(_isServer && (_c1==null || _c2==null))
+            return;
         handleInput();
-        wagon1.update(dt);
-        wagon2.update(dt);
-        fruit.update(dt);
-        bomb.update(dt);
-        boolean sync=true;
 
-        /*if (_updated) {
-            if (id == 1) {
-                //          if (_c != null)
-                _proxy.move1(wagon1.getPosition().x, wagon1.getPosition().y);
-//                    _c.movec1(wagon1.getPosition().x, wagon1.getPosition().y);
-            } else if (id == 2) {
-                //         if (_c != null)
-                _proxy.move2(wagon2.getPosition().x, wagon2.getPosition().y);
-//                    _c.movec2(wagon2.getPosition().x, wagon2.getPosition().y);
+        if(_isServer) {
+            wagon1.update(dt);
+            wagon2.update(dt);
+            fruit.update(dt);
+            bomb.update(dt);
 
-                //_proxy.move1(wagon2.getPosition().x, wagon2.getPosition().y);
+            fruit.detectCollision(wagon1);
+            fruit.detectCollision(wagon2);
+
+            fruit.detectCollision(floor);
+
+            //TODO lost state
+            if (bomb.detectCollision(wagon1)) {
+                bombSound.play();
+                winnerid=2;
+                winnerscore = wagon2.getScore();
+                gameover = true;
+            }
+            if (bomb.detectCollision(wagon2)) {
+                bombSound.play();
+                winnerid=1;
+                winnerscore = wagon1.getScore();
+                gameover = true;
+            }
+            bomb.detectCollision(floor);
+
+            wagon1.detectFall(floor);
+            wagon2.detectFall(floor);
+
+            if (wagon1.getPosition().y <= 0) {
+                winnerid=2;
+                winnerscore = wagon2.getScore();
+                gameover = true;
+
+            }
+            if (wagon2.getPosition().y <= 0) {
+                winnerid = 1;
+                winnerscore = wagon1.getScore();
+                gameover = true;
             }
 
-            _updated = false;
-        } */
-
-        if (!_isServer && _updated) {
-            if(id==1)
-                _proxy.move(id, wagon1.getPosition().x, wagon1.getPosition().y);
-            else if (id==2)
-                _proxy.move(id, wagon2.getPosition().x, wagon2.getPosition().y);
-            _updated = false;
         }
 
-
-        if (fruit.detectCollision(wagon1) || fruit.detectCollision(wagon2)) {
-            caughtSound.play();
-            sync=false;
+        if(gameover){
+            if(_isServer){
+                _c1.tellGameover(winnerid, winnerscore);
+                _c2.tellGameover(winnerid, winnerscore);
+            }
+            gameover(winnerid, winnerscore);
         }
+    }
 
-        if(fruit.detectCollision(floor) && _isServer){
-            sync=false;
-        }
-
-
-        if (bomb.detectCollision(wagon1)) {
-            bombSound.play();
-            gsm.set(new LostState(gsm, wagon1.getScore()));
-        }
-        if (bomb.detectCollision(wagon2)) {
-            bombSound.play();
-            gsm.set(new LostState(gsm, wagon2.getScore()));
-        }
-        if(bomb.detectCollision(floor) && _isServer){
-            sync=false;
-        }
-
-        wagon1.detectFall(floor);
-        wagon2.detectFall(floor);
-
-        if (wagon1.getPosition().y <= 0)
-            gsm.set(new LostState(gsm, wagon2.getScore()));
-        if (wagon2.getPosition().y <= 0)
-            gsm.set(new LostState(gsm, wagon1.getScore()));
-
-        if(!sync && _isServer){
-            _c1.syncFruit(fruit.getStartTime(),fruit.getPosition());
-            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
-            _c2.syncFruit(fruit.getStartTime(),fruit.getPosition());
-            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
-        }
+    public void gameover(int winnerid, int winnerscore){
+        if(_isServer)
+            gsm.set(new LostMPState(gsm, id, winnerid, winnerscore, true));
+        else if(id==winnerid)
+            gsm.set(new LostMPState(gsm, id, winnerid, winnerscore, false));
+        else
+            gsm.set(new LostMPState(gsm, id, winnerid, winnerscore, false));
     }
 
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
+
         sb.draw(sky, cam.position.x - (cam.viewportWidth / 2), 0, WagOn.WIDTH, WagOn.HEIGHT);
-        sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());
-        sb.draw(bomb.getTex(), bomb.getPosition().x, bomb.getPosition().y, bomb.getWidth(), bomb.getHeight());
-        sb.draw(wagon1.getTex(), wagon1.getPosition().x, wagon1.getPosition().y, wagon1.getWidth(), wagon1.getHeight());
-        sb.draw(wagon2.getTex(), wagon2.getPosition().x, wagon2.getPosition().y, wagon2.getWidth(), wagon2.getHeight());
-        floor.render(sb);
+        if(_isServer) {
+            sb.draw(fruit.getTex(), fruit.getPosition().x, fruit.getPosition().y, fruit.getWidth(), fruit.getHeight());
+            sb.draw(bomb.getTex(), bomb.getPosition().x, bomb.getPosition().y, bomb.getWidth(), bomb.getHeight());
+            sb.draw(wagon1.getTex(), wagon1.getPosition().x, wagon1.getPosition().y, wagon1.getWidth(), wagon1.getHeight());
+            sb.draw(wagon2.getTex(), wagon2.getPosition().x, wagon2.getPosition().y, wagon2.getWidth(), wagon2.getHeight());
+            floor.render(sb);
+        }
+        String strScore;
 
-        String strScore = ((Integer) wagon1.getScore()).toString();
-        font.draw(sb, strScore, WagOn.WIDTH - strScore.length() * State.font_size, WagOn.HEIGHT - 10);
+        if(_isServer){
 
-        strScore = ((Integer) wagon2.getScore()).toString();
-        font.draw(sb, strScore, 10, WagOn.HEIGHT - 10);
+            strScore = "PINK " +((Integer) wagon1.getScore()).toString();
+            font.draw(sb, strScore, WagOn.WIDTH - strScore.length() * State.font_size, WagOn.HEIGHT - 10);
+
+            strScore = "PURPLE " + ((Integer) wagon2.getScore()).toString();
+            font.draw(sb, strScore, 10, WagOn.HEIGHT - 10);
+        }
+        else {
+
+            font.draw(sb, "Player "+ id, WagOn.WIDTH/2, WagOn.HEIGHT/6);
+
+            strScore = _proxy.getScore(id);
+
+            titleFont.draw(sb, strScore, WagOn.WIDTH/2, WagOn.HEIGHT/2);
+
+        }
 
         sb.end();
     }
 
     @Override
     public void dispose() {
-        fruit.getTex().dispose();
-        bomb.getTex().dispose();
-        wagon1.getTex().dispose();
-        wagon2.getTex().dispose();
-        sky.dispose();
-    }
-
-    @Override
-    public void moveC(int id, float x, float y) {
-        if(id==1)
-            wagon1.getPosition().set(x, y);
-        else if(id==2)
-            wagon2.getPosition().set(x, y);
-
-    }
-
-    @Override
-    public void move(int id, float x, float y) {
-        if (id == 1){
-            wagon1.getPosition().set(x, y);
-            if(_c2!=null)
-                _c2.moveC(id,x,y);
-        }
-        else if (id == 2) {
-            wagon2.getPosition().set(x, y);
-            if(_c1!=null)
-                _c1.moveC(id, x, y);
+        if(_isServer){
+            fruit.getTex().dispose();
+            bomb.getTex().dispose();
+            wagon1.getTex().dispose();
+            wagon2.getTex().dispose();
+            server.close();
         } else {
-            System.err.println("unknown move id " + id);
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        sky.dispose();
     }
 
     @Override
     public int join(ClientCallbackInterface c) {
         if (_c1 == null) {
             _c1 = c;
-            _c1.syncFruit(fruit.getStartTime(),fruit.getPosition());
-            _c1.syncBomb(bomb.getStartTime(),bomb.getPosition());
-
+            System.out.println("c1 connected");
             return 1;
         } else if (_c2 == null) {
             _c2 = c;
-            _c2.syncFruit(fruit.getStartTime(),fruit.getPosition());
-            _c2.syncBomb(bomb.getStartTime(),bomb.getPosition());
-
+            System.out.println("c2 connected");
             return 2;
         }
 
         System.out.println("too many clients");
+
         return -1;
     }
 
     @Override
-    public void syncFruit(long startime, Vector2 p){
-        fruit.setStartTime(startime);
-        fruit.setPosition(p);
+    public void accWagon(int id, float acc){
+        if(id==1)
+            wagon1.updateOnAccelerometer(acc);
+        else if(id==2)
+            wagon2.updateOnAccelerometer(acc);
 
     }
 
     @Override
-    public void syncBomb(long startime, Vector2 p){
-        bomb.setStartTime(startime);
-        bomb.setPosition(p);
+    public void jumpWagon(int id){
+        if(id==1 && !(wagon1.getState() instanceof Falling))
+            wagon1.jump();
+        else if(id==2 && !(wagon2.getState() instanceof Falling))
+            wagon2.jump();
+    }
+
+    @Override
+    public String getScore(int id){
+        if(id==1)
+            return ((Integer)wagon1.getScore()).toString();
+        if(id==2)
+            return ((Integer)wagon2.getScore()).toString();
+        return "";
+    }
+
+    @Override
+    public void tellGameover(int wid, int wscore) {
+        winnerid = wid;
+        winnerscore = wscore;
+        gameover = true;
+
     }
 }
