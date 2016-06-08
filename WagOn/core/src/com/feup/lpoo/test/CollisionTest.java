@@ -40,6 +40,25 @@ public class CollisionTest {
     }
 
     @Test
+    public void testRecoverFloor(){
+
+        Floor floor = new Floor(1);
+        Bomb bomb = new Bomb();
+        float height;
+
+        bomb.update(10);
+        bomb.startFall();
+        do{
+            height = bomb.getPosition().y;
+            bomb.update(10);
+            bomb.detectCollision(floor);
+        }while(bomb.getPosition().y <= height);
+
+        floor.recoverTile();
+        assertEquals(false,  floor.getTiles().first().isDestroyed());
+    }
+
+    @Test
     public void testExplodeWagon(){
         Wagon wagon = new Wagon();
         Bomb bomb = new Bomb();

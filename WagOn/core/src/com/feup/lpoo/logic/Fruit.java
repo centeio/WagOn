@@ -1,9 +1,7 @@
 package com.feup.lpoo.logic;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.feup.lpoo.WagOn;
 
 /**
  * Class representing falling fruit
@@ -11,10 +9,10 @@ import com.feup.lpoo.WagOn;
  */
 public class Fruit extends FallingObj {
     private static float TIME_TO_SPEEDUP = 20f; /**Time taken for fruit to speedup*/
-    protected static int HEIGHT = 20; /**Fruit's texture height*/
-    protected float speed;
-    private float timeSinceSpeedUp;
-    private boolean isSinglePlayer;
+    protected static int HEIGHT = 20;           /**Fruit's texture height*/
+    protected float difficulty;                 /**Increasing difficulty*/
+    private float timeSinceSpeedUp;             /**Time since last increase in difficulty*/
+    private boolean isSinglePlayer;             /**Is fruit in a single player game*/
 
     /**
      * Constructor for class Fruit
@@ -26,7 +24,7 @@ public class Fruit extends FallingObj {
         isSinglePlayer = false;
         startTime = TimeUtils.millis();
         timeSinceSpeedUp = 0;
-        speed = 1f;
+        difficulty = 1f;
     }
 
     /**
@@ -36,10 +34,14 @@ public class Fruit extends FallingObj {
         super(0, "melon.png",HEIGHT);
 
         reposition();
+        isSinglePlayer = false;
         timeSinceSpeedUp = 0;
-        speed = 1f;
+        difficulty = 1f;
     }
 
+    /**
+     * Informs that game is singlePlayer
+     */
     public void setSinglePlayer(){
         isSinglePlayer = true;
     }
@@ -55,7 +57,7 @@ public class Fruit extends FallingObj {
         if(isSinglePlayer) {
             timeSinceSpeedUp += dt;
             if (timeSinceSpeedUp >= TIME_TO_SPEEDUP) {
-                speed += 0.3f;
+                difficulty += 0.3f;
                 timeSinceSpeedUp = 0;
             }
         }
@@ -64,12 +66,12 @@ public class Fruit extends FallingObj {
             first = false;
         }
         if(startTime <= TimeUtils.millis()) {
-            acceleration.scl(speed);
+            acceleration.scl(difficulty);
             velocity.add(acceleration);
             velocity.scl(dt);
             position.add(velocity);
             velocity.scl(1 / dt);
-            acceleration.scl(1/speed);
+            acceleration.scl(1/ difficulty);
         }
         bounds.setPosition(position.x, position.y);
 
@@ -100,6 +102,6 @@ public class Fruit extends FallingObj {
     public void reset() {
         super.reset();
         timeSinceSpeedUp = 0;
-        speed = 1f;
+        difficulty = 1f;
     }
 }

@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.feup.lpoo.WagOn;
 
+import java.util.Stack;
+
 /**
  * Class representing floor made of tiles
  * @author Carolina Centeio e Ines Proenca
@@ -12,6 +14,7 @@ public class Floor {
     private Array<Tile> tiles;                  /**Tiles constituting floor*/
     public static final int GROUND_HEIGHT = 30; /**Floor height*/
     private float tileWidth;                    /**Width of a tile*/
+    private Stack<Integer> destroyedTiles;      /**Stack with destroyed tiles*/
 
     /**
      * Constructor of class Floor
@@ -20,6 +23,7 @@ public class Floor {
     public Floor(int numTiles){
         tiles = new Array<Tile>();
         tileWidth = WagOn.WIDTH/(float)numTiles;
+        destroyedTiles = new Stack<Integer>();
 
         for(int i = 0; i < numTiles; i++)
             tiles.add(new Tile(i*tileWidth));
@@ -48,7 +52,20 @@ public class Floor {
      * @param x position of tile to destroy
      */
     public void destroyTile(float x){
-        tiles.get((int)(x/tileWidth)).destroy();
+        int index = (int)(x/tileWidth);
+        tiles.get(index).destroy();
+        destroyedTiles.add(index);
+    }
+
+    /**
+     * Recovers the last tile to be destroyed
+     */
+    public void recoverTile(){
+        if(destroyedTiles.empty())
+            return;
+
+        int top = destroyedTiles.pop();
+        tiles.get(top).reset();
     }
 
     /**

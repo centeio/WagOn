@@ -70,6 +70,8 @@ public class PlayState  extends State{
 
         if(fruit.detectCollision(wagon)){
             caughtSound.play();
+            if(wagon.getScore()%10 == 0 && wagon.getScore() > 0)
+                floor.recoverTile();
         }
         fruit.detectCollision(floor);
 
